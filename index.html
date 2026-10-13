@@ -1,0 +1,627 @@
+
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevGames | Play Beyond</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;800;900&display=swap');
+
+:root {
+  --bg: #080b16;
+  --card: #111629;
+  --purple: #8b5cf6;
+  --cyan: #22d3ee;
+  --text: #f4f5ff;
+  --muted: #929bb8;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Heebo', sans-serif;
+}
+button { font: inherit; cursor: pointer; }
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 7%;
+  border-bottom: 1px solid #20263d;
+  background: #080b16eF;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  backdrop-filter: blur(15px);
+}
+.logo {
+  font-size: 27px;
+  font-weight: 900;
+  direction: ltr;
+  color: white;
+}
+.logo span { color: var(--purple); }
+nav { display: flex; gap: 24px; }
+nav a { color: var(--muted); text-decoration: none; }
+nav a:hover { color: var(--cyan); }
+.score {
+  background: #19132e;
+  color: #c4b5fd;
+  padding: 9px 15px;
+  border-radius: 12px;
+  border: 1px solid #483078;
+}
+.hero {
+  padding: 85px 7% 75px;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at 50% 0%, #5628a644, transparent 60%),
+    radial-gradient(ellipse at 90% 70%, #0e749033, transparent 45%);
+}
+.tag {
+  display: inline-block;
+  color: var(--cyan);
+  border: 1px solid #164e63;
+  background: #08334466;
+  padding: 7px 15px;
+  border-radius: 30px;
+  font-size: 13px;
+}
+h1 {
+  font-size: clamp(48px, 8vw, 90px);
+  line-height: 1.1;
+  margin: 25px 0 15px;
+  font-weight: 900;
+  letter-spacing: -3px;
+}
+.gradient {
+  background: linear-gradient(90deg, #a78bfa, #22d3ee);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.hero p {
+  color: var(--muted);
+  max-width: 570px;
+  margin: 0 auto 30px;
+  font-size: 17px;
+  line-height: 1.9;
+}
+.primary {
+  background: linear-gradient(100deg, #7c3aed, #6366f1);
+  color: white;
+  padding: 14px 27px;
+  border: 0;
+  border-radius: 12px;
+  font-weight: 800;
+  box-shadow: 0 0 28px #7c3aed40;
+  transition: .2s;
+}
+.primary:hover { transform: translateY(-3px); box-shadow: 0 0 35px #8b5cf677; }
+.secondary {
+  background: #171d30;
+  border: 1px solid #303954;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+}
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 55px;
+  flex-wrap: wrap;
+  margin-top: 50px;
+}
+.stat strong { display: block; font-size: 25px; }
+.stat small { color: var(--muted); }
+section { padding: 55px 7%; }
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+}
+h2 { margin: 0; font-size: 29px; }
+.section-head p { color: var(--muted); margin-bottom: 0; }
+.games {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+.game {
+  background: var(--card);
+  border: 1px solid #252d46;
+  border-radius: 18px;
+  overflow: hidden;
+  transition: .25s;
+}
+.game:hover {
+  transform: translateY(-6px);
+  border-color: #8b5cf6;
+  box-shadow: 0 12px 35px #0005;
+}
+.art {
+  height: 180px;
+  display: grid;
+  place-items: center;
+  font-size: 70px;
+  position: relative;
+  overflow: hidden;
+}
+.art::before {
+  content: "";
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: #ffffff12;
+  filter: blur(5px);
+}
+.art span { position: relative; transition: .3s; }
+.game:hover .art span { transform: scale(1.15) rotate(-5deg); }
+.art.purple { background: linear-gradient(135deg,#35165f,#171c43); }
+.art.blue { background: linear-gradient(135deg,#064e65,#17234a); }
+.art.orange { background: linear-gradient(135deg,#713f12,#35194d); }
+.game-body { padding: 20px; }
+.game h3 { margin: 0 0 7px; font-size: 21px; }
+.game p { color: var(--muted); font-size: 14px; line-height: 1.7; min-height: 48px; }
+.game-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: 17px;
+}
+.pill {
+  font-size: 12px;
+  color: var(--cyan);
+  background: #08334480;
+  padding: 5px 9px;
+  border-radius: 8px;
+}
+.play {
+  background: #7c3aed;
+  color: white;
+  border: none;
+  padding: 9px 17px;
+  border-radius: 9px;
+  font-weight: 700;
+}
+.play:hover { background: #6d28d9; }
+.features {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 18px;
+}
+.feature {
+  border: 1px solid #252d46;
+  background: #0e1323;
+  border-radius: 14px;
+  padding: 23px;
+}
+.feature .icon { font-size: 28px; }
+.feature h3 { margin: 12px 0 6px; }
+.feature p { color: var(--muted); font-size: 14px; line-height: 1.8; }
+footer {
+  padding: 30px 7%;
+  border-top: 1px solid #20263d;
+  color: var(--muted);
+  text-align: center;
+}
+footer b { color: var(--purple); }
+
+/* Game window */
+#modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background: #03050beF;
+  padding: 20px;
+  overflow-y: auto;
+  place-items: center;
+}
+#modal.open { display: grid; }
+.window {
+  width: min(100%, 560px);
+  background: #111629;
+  border: 1px solid #45406b;
+  border-radius: 20px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 0 60px #7c3aed22;
+}
+.window-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.window h2 { font-size: 25px; }
+.close {
+  border: 0;
+  background: #272d42;
+  color: white;
+  border-radius: 9px;
+  padding: 8px 13px;
+}
+#gameArea { padding: 20px 0; }
+#gameArea p { color: var(--muted); line-height: 1.8; }
+.big-number { font-size: 48px; font-weight: 900; color: var(--cyan); }
+input {
+  width: 100%;
+  background: #080b16;
+  color: white;
+  border: 1px solid #45406b;
+  padding: 13px;
+  border-radius: 10px;
+  margin: 12px 0;
+  font: inherit;
+  text-align: center;
+}
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 9px;
+  margin: 20px 0;
+}
+.memory-card {
+  aspect-ratio: 1;
+  background: #252044;
+  border: 1px solid #49406b;
+  border-radius: 10px;
+  color: white;
+  font-size: 25px;
+}
+.memory-card:disabled { opacity: 1; background: #164e63; }
+#message { min-height: 30px; color: var(--cyan); }
+@media(max-width:800px) {
+  .games { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .features { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  nav { display: none; }
+}
+@media(max-width:520px) {
+  .games,.features { grid-template-columns: 1fr; }
+  .hero { padding-top: 60px; }
+  .stats { gap: 25px; }
+  h1 { letter-spacing: -2px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Dev<span>Games</span></div>
+  <nav>
+    <a href="#home">ראשי</a>
+    <a href="#games">משחקים</a>
+    <a href="#features">היתרונות שלנו</a>
+  </nav>
+  <div class="score">⚡ <span id="totalScore">0</span> XP</div>
+</header>
+
+<main>
+  <div class="hero" id="home">
+    <span class="tag">✦ YOUR NEXT GAMING DESTINATION</span>
+    <h1>PLAY BEYOND<br><span class="gradient">LIMITS.</span></h1>
+    <p>
+      ברוכים הבאים ל־DevGames — המקום שבו משחקים,
+      אתגרים וכיף נפגשים. בחרו משחק, שברו שיאים
+      והוכיחו מה אתם שווים.
+    </p>
+    <button class="primary" onclick="document.querySelector('#games').scrollIntoView({behavior:'smooth'})">
+      🎮 גלה את המשחקים
+    </button>
+    <div class="stats">
+      <div class="stat"><strong>03</strong><small>משחקים זמינים</small></div>
+      <div class="stat"><strong>∞</strong><small>ניסיונות לשיא חדש</small></div>
+      <div class="stat"><strong>100%</strong><small>חוויית משחק</small></div>
+    </div>
+  </div>
+
+  <section id="games">
+    <div class="section-head">
+      <div>
+        <h2>בחר את האתגר שלך <span class="gradient">.</span></h2>
+        <p>שלושה משחקים, אינסוף דרכים לנצח.</p>
+      </div>
+      <span class="pill">● PLAY NOW</span>
+    </div>
+
+    <div class="games">
+      <article class="game">
+        <div class="art purple"><span>🧠</span></div>
+        <div class="game-body">
+          <h3>Memory Matrix</h3>
+          <p>מצא את כל זוגות הקלפים ובדוק כמה טוב הזיכרון שלך.</p>
+          <div class="game-foot">
+            <span class="pill">זיכרון</span>
+            <button class="play" onclick="startGame('memory')">שחק עכשיו ←</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="game">
+        <div class="art blue"><span>⚡</span></div>
+        <div class="game-body">
+          <h3>Reflex Rush</h3>
+          <p>בדוק את מהירות התגובה שלך. לחץ ברגע שהמסך הופך לירוק!</p>
+          <div class="game-foot">
+            <span class="pill">זריזות</span>
+            <button class="play" onclick="startGame('reflex')">שחק עכשיו ←</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="game">
+        <div class="art orange"><span>🔮</span></div>
+        <div class="game-body">
+          <h3>Number Hunter</h3>
+          <p>נחש את המספר הסודי בעזרת רמזים ונסה לנצח בכמה שפחות ניסיונות.</p>
+          <div class="game-foot">
+            <span class="pill">חשיבה</span>
+            <button class="play" onclick="startGame('number')">שחק עכשיו ←</button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="section-head">
+      <div>
+        <h2>למה DevGames?</h2>
+        <p>בנוי בשביל חוויית משחק פשוטה וכיפית.</p>
+      </div>
+    </div>
+    <div class="features">
+      <div class="feature">
+        <div class="icon">🏆</div>
+        <h3>צבור XP</h3>
+        <p>קבל נקודות על ניצחונות והתקדם בכל משחק.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">💾</div>
+        <h3>שמור שיאים</h3>
+        <p>הניקוד נשמר בדפדפן שלך גם לאחר רענון הדף.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">🌌</div>
+        <h3>עיצוב מתקדם</h3>
+        <p>ממשק כהה, אפקטים זוהרים והתאמה לטלפון ולמחשב.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="logo">Dev<span>Games</span></div>
+  <p>Play beyond limits. Built for gamers, by developers.</p>
+  <small>© 2026 DevGames · Made with 💜</small>
+</footer>
+
+<div id="modal">
+  <div class="window">
+    <div class="window-top">
+      <h2 id="gameTitle">Game</h2>
+      <button class="close" onclick="closeGame()">✕ סגור</button>
+    </div>
+    <div id="gameArea"></div>
+    <div id="message" aria-live="polite"></div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let xp = Number(localStorage.getItem('devgames-xp')) || 0;
+let bestReflex = Number(localStorage.getItem('devgames-reflex')) || 0;
+let timer = null;
+let startTime = 0;
+let ready = false;
+let locked = false;
+let secret = 0;
+let attempts = 0;
+let firstCard = null;
+let matches = 0;
+let memoryMoves = 0;
+
+function updateXP(points) {
+  xp += points;
+  localStorage.setItem('devgames-xp', xp);
+  $('totalScore').textContent = xp;
+}
+updateXP(0);
+
+function closeGame() {
+  $('modal').classList.remove('open');
+  clearTimeout(timer);
+  ready = false;
+  locked = false;
+}
+
+function startGame(type) {
+  clearTimeout(timer);
+  $('modal').classList.add('open');
+  $('message').textContent = '';
+  if (type === 'memory') memoryGame();
+  if (type === 'reflex') reflexGame();
+  if (type === 'number') numberGame();
+}
+
+function memoryGame() {
+  $('gameTitle').textContent = '🧠 Memory Matrix';
+  firstCard = null;
+  matches = 0;
+  memoryMoves = 0;
+  locked = false;
+
+  const symbols = ['🚀','👾','💎','🔥','🎮','🌙','⚡','🪐'];
+  const deck = [...symbols,...symbols].sort(() => Math.random() - 0.5);
+
+  $('gameArea').innerHTML = `
+    <p>מצא את כל שמונת הזוגות. נסה לסיים בכמה שפחות מהלכים!</p>
+    <p>מהלכים: <b id="moves">0</b> · זוגות: <b id="pairs">0</b>/8</p>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <button class="secondary" onclick="memoryGame()">🔄 משחק חדש</button>
+  `;
+
+  deck.forEach(symbol => {
+    const btn = document.createElement('button');
+    btn.className = 'memory-card';
+    btn.textContent = '?';
+    btn.dataset.symbol = symbol;
+    btn.setAttribute('aria-label', 'קלף מוסתר');
+    btn.onclick = () => flipCard(btn);
+    $('memoryGrid').appendChild(btn);
+  });
+}
+
+function flipCard(card) {
+  if (locked || card.disabled || card === firstCard) return;
+  card.textContent = card.dataset.symbol;
+  card.disabled = true;
+  card.setAttribute('aria-label', card.dataset.symbol);
+
+  if (!firstCard) {
+    firstCard = card;
+    return;
+  }
+
+  memoryMoves++;
+  $('moves').textContent = memoryMoves;
+
+  if (firstCard.dataset.symbol === card.dataset.symbol) {
+    matches++;
+    $('pairs').textContent = matches;
+    firstCard = null;
+
+    if (matches === 8) {
+      const points = Math.max(10, 100 - memoryMoves);
+      updateXP(points);
+      $('message').textContent = `🎉 ניצחת! קיבלת ${points} XP`;
+    }
+  } else {
+    locked = true;
+    const previous = firstCard;
+    firstCard = null;
+
+    timer = setTimeout(() => {
+      previous.disabled = false;
+      card.disabled = false;
+      previous.textContent = '?';
+      card.textContent = '?';
+      previous.setAttribute('aria-label', 'קלף מוסתר');
+      card.setAttribute('aria-label', 'קלף מוסתר');
+      locked = false;
+    }, 800);
+  }
+}
+
+function reflexGame() {
+  $('gameTitle').textContent = '⚡ Reflex Rush';
+  ready = false;
+  locked = false;
+
+  $('gameArea').innerHTML = `
+    <p>לחץ על הכפתור כדי להתחיל. כשהוא יהפוך לירוק, לחץ מהר ככל האפשר!</p>
+    <div class="big-number" id="reflexDisplay">⚡</div>
+    <button class="primary" id="reflexBtn" style="width:100%;margin:15px 0"
+      onclick="reflexClick()">התחל אתגר</button>
+    <p>השיא שלך: <b id="bestReflex">${bestReflex ? bestReflex + ' ms' : 'עדיין אין שיא'}</b></p>
+  `;
+}
+
+function reflexClick() {
+  const btn = $('reflexBtn');
+  if (!ready && !locked) {
+    locked = true;
+    btn.textContent = '⏳ המתן לאור הירוק...';
+    btn.style.background = '#b45309';
+    $('reflexDisplay').textContent = '⌛';
+
+    timer = setTimeout(() => {
+      ready = true;
+      locked = false;
+      startTime = performance.now();
+      btn.textContent = '🟢 לחץ עכשיו!';
+      btn.style.background = '#16a34a';
+      $('reflexDisplay').textContent = 'GO!';
+    }, 1500 + Math.random() * 3000);
+    return;
+  }
+
+  if (locked) return;
+
+  if (ready) {
+    const elapsed = Math.round(performance.now() - startTime);
+    ready = false;
+    btn.textContent = `זמן תגובה: ${elapsed} ms`;
+    btn.style.background = '#7c3aed';
+    $('reflexDisplay').textContent = elapsed + ' ms';
+
+    let points = elapsed < 250 ? 50 : elapsed < 400 ? 25 : 10;
+    updateXP(points);
+
+    if (!bestReflex || elapsed < bestReflex) {
+      bestReflex = elapsed;
+      localStorage.setItem('devgames-reflex', bestReflex);
+      $('bestReflex').textContent = bestReflex + ' ms';
+    }
+    $('message').textContent = `קיבלת ${points} XP! לחץ שוב לניסיון נוסף.`;
+    locked = true;
+    return;
+  }
+}
+
+function numberGame() {
+  $('gameTitle').textContent = '🔮 Number Hunter';
+  secret = Math.floor(Math.random() * 100) + 1;
+  attempts = 0;
+
+  $('gameArea').innerHTML = `
+    <p>אני חושב על מספר בין 1 ל־100. האם תצליח למצוא אותו?</p>
+    <form id="guessForm">
+      <input id="guessInput" type="number" min="1" max="100"
+        placeholder="הכנס מספר..." required />
+      <button class="primary" type="submit" style="width:100%">בדוק ניחוש</button>
+    </form>
+    <p>ניסיונות: <b id="attemptCount">0</b></p>
+    <button class="secondary" onclick="numberGame()">🔄 התחל מחדש</button>
+  `;
+
+  $('guessForm').onsubmit = e => {
+    e.preventDefault();
+    const input = $('guessInput');
+    const guess = Number(input.value);
+    if (!Number.isInteger(guess) || guess < 1 || guess > 100) return;
+
+    attempts++;
+    $('attemptCount').textContent = attempts;
+
+    if (guess === secret) {
+      const points = Math.max(10, 110 - attempts * 10);
+      updateXP(points);
+      $('message').textContent = `🎉 צדקת! המספר היה ${secret}. קיבלת ${points} XP!`;
+      $('guessForm').querySelector('button').disabled = true;
+      input.disabled = true;
+    } else {
+      $('message').textContent = guess < secret ? '📈 המספר הסודי גדול יותר!' : '📉 המספר הסודי קטן יותר!';
+      input.value = '';
+      input.focus();
+    }
+  };
+}
+
+$('modal').addEventListener('click', e => {
+  if (e.target === $('modal')) closeGame();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeGame();
+});
+</script>
+</body>
+</html>
