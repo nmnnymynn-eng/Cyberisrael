@@ -1,627 +1,1042 @@
-
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DevGames | Play Beyond</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;800;900&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevGames - פלטפורמת משחקי פרימיום</title>
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;700&family=Rubik:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0a0b10;
+            --bg-card: rgba(18, 22, 36, 0.75);
+            --accent-red: #ff2a55;
+            --accent-cyan: #00f0ff;
+            --accent-gold: #ffb700;
+            --text-main: #f0f3f8;
+            --text-muted: #8a99ad;
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --font-display: 'Teko', sans-serif;
+            --font-body: 'Rubik', sans-serif;
+        }
 
-:root {
-  --bg: #080b16;
-  --card: #111629;
-  --purple: #8b5cf6;
-  --cyan: #22d3ee;
-  --text: #f4f5ff;
-  --muted: #929bb8;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Heebo', sans-serif;
-}
-button { font: inherit; cursor: pointer; }
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 7%;
-  border-bottom: 1px solid #20263d;
-  background: #080b16eF;
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  backdrop-filter: blur(15px);
-}
-.logo {
-  font-size: 27px;
-  font-weight: 900;
-  direction: ltr;
-  color: white;
-}
-.logo span { color: var(--purple); }
-nav { display: flex; gap: 24px; }
-nav a { color: var(--muted); text-decoration: none; }
-nav a:hover { color: var(--cyan); }
-.score {
-  background: #19132e;
-  color: #c4b5fd;
-  padding: 9px 15px;
-  border-radius: 12px;
-  border: 1px solid #483078;
-}
-.hero {
-  padding: 85px 7% 75px;
-  text-align: center;
-  background:
-    radial-gradient(ellipse at 50% 0%, #5628a644, transparent 60%),
-    radial-gradient(ellipse at 90% 70%, #0e749033, transparent 45%);
-}
-.tag {
-  display: inline-block;
-  color: var(--cyan);
-  border: 1px solid #164e63;
-  background: #08334466;
-  padding: 7px 15px;
-  border-radius: 30px;
-  font-size: 13px;
-}
-h1 {
-  font-size: clamp(48px, 8vw, 90px);
-  line-height: 1.1;
-  margin: 25px 0 15px;
-  font-weight: 900;
-  letter-spacing: -3px;
-}
-.gradient {
-  background: linear-gradient(90deg, #a78bfa, #22d3ee);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-.hero p {
-  color: var(--muted);
-  max-width: 570px;
-  margin: 0 auto 30px;
-  font-size: 17px;
-  line-height: 1.9;
-}
-.primary {
-  background: linear-gradient(100deg, #7c3aed, #6366f1);
-  color: white;
-  padding: 14px 27px;
-  border: 0;
-  border-radius: 12px;
-  font-weight: 800;
-  box-shadow: 0 0 28px #7c3aed40;
-  transition: .2s;
-}
-.primary:hover { transform: translateY(-3px); box-shadow: 0 0 35px #8b5cf677; }
-.secondary {
-  background: #171d30;
-  border: 1px solid #303954;
-  color: white;
-  padding: 12px 20px;
-  border-radius: 10px;
-}
-.stats {
-  display: flex;
-  justify-content: center;
-  gap: 55px;
-  flex-wrap: wrap;
-  margin-top: 50px;
-}
-.stat strong { display: block; font-size: 25px; }
-.stat small { color: var(--muted); }
-section { padding: 55px 7%; }
-.section-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin-bottom: 25px;
-}
-h2 { margin: 0; font-size: 29px; }
-.section-head p { color: var(--muted); margin-bottom: 0; }
-.games {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 22px;
-}
-.game {
-  background: var(--card);
-  border: 1px solid #252d46;
-  border-radius: 18px;
-  overflow: hidden;
-  transition: .25s;
-}
-.game:hover {
-  transform: translateY(-6px);
-  border-color: #8b5cf6;
-  box-shadow: 0 12px 35px #0005;
-}
-.art {
-  height: 180px;
-  display: grid;
-  place-items: center;
-  font-size: 70px;
-  position: relative;
-  overflow: hidden;
-}
-.art::before {
-  content: "";
-  position: absolute;
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  background: #ffffff12;
-  filter: blur(5px);
-}
-.art span { position: relative; transition: .3s; }
-.game:hover .art span { transform: scale(1.15) rotate(-5deg); }
-.art.purple { background: linear-gradient(135deg,#35165f,#171c43); }
-.art.blue { background: linear-gradient(135deg,#064e65,#17234a); }
-.art.orange { background: linear-gradient(135deg,#713f12,#35194d); }
-.game-body { padding: 20px; }
-.game h3 { margin: 0 0 7px; font-size: 21px; }
-.game p { color: var(--muted); font-size: 14px; line-height: 1.7; min-height: 48px; }
-.game-foot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  margin-top: 17px;
-}
-.pill {
-  font-size: 12px;
-  color: var(--cyan);
-  background: #08334480;
-  padding: 5px 9px;
-  border-radius: 8px;
-}
-.play {
-  background: #7c3aed;
-  color: white;
-  border: none;
-  padding: 9px 17px;
-  border-radius: 9px;
-  font-weight: 700;
-}
-.play:hover { background: #6d28d9; }
-.features {
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 18px;
-}
-.feature {
-  border: 1px solid #252d46;
-  background: #0e1323;
-  border-radius: 14px;
-  padding: 23px;
-}
-.feature .icon { font-size: 28px; }
-.feature h3 { margin: 12px 0 6px; }
-.feature p { color: var(--muted); font-size: 14px; line-height: 1.8; }
-footer {
-  padding: 30px 7%;
-  border-top: 1px solid #20263d;
-  color: var(--muted);
-  text-align: center;
-}
-footer b { color: var(--purple); }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
 
-/* Game window */
-#modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 10;
-  background: #03050beF;
-  padding: 20px;
-  overflow-y: auto;
-  place-items: center;
-}
-#modal.open { display: grid; }
-.window {
-  width: min(100%, 560px);
-  background: #111629;
-  border: 1px solid #45406b;
-  border-radius: 20px;
-  padding: 25px;
-  text-align: center;
-  box-shadow: 0 0 60px #7c3aed22;
-}
-.window-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.window h2 { font-size: 25px; }
-.close {
-  border: 0;
-  background: #272d42;
-  color: white;
-  border-radius: 9px;
-  padding: 8px 13px;
-}
-#gameArea { padding: 20px 0; }
-#gameArea p { color: var(--muted); line-height: 1.8; }
-.big-number { font-size: 48px; font-weight: 900; color: var(--cyan); }
-input {
-  width: 100%;
-  background: #080b16;
-  color: white;
-  border: 1px solid #45406b;
-  padding: 13px;
-  border-radius: 10px;
-  margin: 12px 0;
-  font: inherit;
-  text-align: center;
-}
-.memory-grid {
-  display: grid;
-  grid-template-columns: repeat(4,1fr);
-  gap: 9px;
-  margin: 20px 0;
-}
-.memory-card {
-  aspect-ratio: 1;
-  background: #252044;
-  border: 1px solid #49406b;
-  border-radius: 10px;
-  color: white;
-  font-size: 25px;
-}
-.memory-card:disabled { opacity: 1; background: #164e63; }
-#message { min-height: 30px; color: var(--cyan); }
-@media(max-width:800px) {
-  .games { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .features { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  nav { display: none; }
-}
-@media(max-width:520px) {
-  .games,.features { grid-template-columns: 1fr; }
-  .hero { padding-top: 60px; }
-  .stats { gap: 25px; }
-  h1 { letter-spacing: -2px; }
-}
-</style>
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(255, 42, 85, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(0, 240, 255, 0.06) 0%, transparent 40%);
+            min-height: 100vh;
+        }
+
+        /* Header Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 40px;
+            background: rgba(10, 11, 16, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-glass);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #fff;
+            text-shadow: 0 0 12px rgba(255, 42, 85, 0.5);
+        }
+
+        .logo span {
+            color: var(--accent-red);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 28px;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--accent-cyan);
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+        }
+
+        /* Container Layout */
+        .main-container {
+            max-width: 1300px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 25px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Game Stage Section */
+        .game-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .game-title-area h1 {
+            font-family: var(--font-display);
+            font-size: 2.4rem;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        .game-title-area p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .game-badges {
+            display: flex;
+            gap: 10px;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent-cyan);
+        }
+
+        /* Game Canvas Frame */
+        #game-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #050608;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8);
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* UI Overlay on Canvas */
+        .game-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .hud-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        /* Health & Shield Bar */
+        .stat-box {
+            background: rgba(10, 11, 16, 0.75);
+            border: 1px solid var(--border-glass);
+            backdrop-filter: blur(8px);
+            padding: 10px 16px;
+            border-radius: 8px;
+            min-width: 180px;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .bar-container {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+
+        .bar-fill {
+            height: 100%;
+            width: 100%;
+            transition: width 0.2s ease;
+        }
+
+        .hp-fill { background: linear-gradient(90deg, #ff2a55, #ff6b00); }
+        .shield-fill { background: linear-gradient(90deg, #00f0ff, #0077ff); }
+
+        .score-display {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            color: var(--accent-gold);
+            text-shadow: 0 0 10px rgba(255, 183, 0, 0.4);
+            text-align: right;
+        }
+
+        /* Bottom HUD - Weapons & Ammo */
+        .hud-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .weapons-selector {
+            display: flex;
+            gap: 8px;
+        }
+
+        .weapon-card {
+            background: rgba(10, 11, 16, 0.8);
+            border: 1px solid var(--border-glass);
+            padding: 8px 14px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 700;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .weapon-card.active {
+            border-color: var(--accent-cyan);
+            color: #fff;
+            background: rgba(0, 240, 255, 0.15);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+        }
+
+        .ammo-box {
+            background: rgba(10, 11, 16, 0.85);
+            border: 1px solid var(--border-glass);
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .ammo-count {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            color: #fff;
+            line-height: 1;
+        }
+
+        .reload-indicator {
+            font-size: 0.75rem;
+            color: var(--accent-red);
+            font-weight: 700;
+            height: 14px;
+            animation: pulse 0.8s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { opacity: 0.4; }
+            to { opacity: 1; }
+        }
+
+        /* Overlay Screens (Start / Game Over) */
+        .screen-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(10, 11, 16, 0.88);
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: auto;
+            z-index: 20;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .screen-overlay h2 {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            color: #fff;
+            margin-bottom: 8px;
+            text-shadow: 0 0 20px rgba(255, 42, 85, 0.6);
+        }
+
+        .screen-overlay p {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            max-width: 450px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .btn-play {
+            background: linear-gradient(135deg, var(--accent-red), #ff0055);
+            color: #fff;
+            border: none;
+            padding: 14px 42px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 42, 85, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .btn-play:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 42, 85, 0.8);
+        }
+
+        /* Control Instructions */
+        .controls-bar {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .controls-bar span kbd {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        /* Sidebar Section */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .panel-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .panel-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border-glass);
+            padding-bottom: 10px;
+        }
+
+        .leaderboard-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+
+        .leaderboard-item .rank {
+            font-weight: 800;
+            width: 24px;
+            color: var(--accent-gold);
+        }
+
+        .leaderboard-item .score {
+            font-weight: 700;
+            color: var(--accent-cyan);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            header { padding: 15px 20px; }
+            .controls-bar { flex-direction: column; gap: 8px; }
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">Dev<span>Games</span></div>
-  <nav>
-    <a href="#home">ראשי</a>
-    <a href="#games">משחקים</a>
-    <a href="#features">היתרונות שלנו</a>
-  </nav>
-  <div class="score">⚡ <span id="totalScore">0</span> XP</div>
-</header>
-
-<main>
-  <div class="hero" id="home">
-    <span class="tag">✦ YOUR NEXT GAMING DESTINATION</span>
-    <h1>PLAY BEYOND<br><span class="gradient">LIMITS.</span></h1>
-    <p>
-      ברוכים הבאים ל־DevGames — המקום שבו משחקים,
-      אתגרים וכיף נפגשים. בחרו משחק, שברו שיאים
-      והוכיחו מה אתם שווים.
-    </p>
-    <button class="primary" onclick="document.querySelector('#games').scrollIntoView({behavior:'smooth'})">
-      🎮 גלה את המשחקים
-    </button>
-    <div class="stats">
-      <div class="stat"><strong>03</strong><small>משחקים זמינים</small></div>
-      <div class="stat"><strong>∞</strong><small>ניסיונות לשיא חדש</small></div>
-      <div class="stat"><strong>100%</strong><small>חוויית משחק</small></div>
-    </div>
-  </div>
-
-  <section id="games">
-    <div class="section-head">
-      <div>
-        <h2>בחר את האתגר שלך <span class="gradient">.</span></h2>
-        <p>שלושה משחקים, אינסוף דרכים לנצח.</p>
-      </div>
-      <span class="pill">● PLAY NOW</span>
-    </div>
-
-    <div class="games">
-      <article class="game">
-        <div class="art purple"><span>🧠</span></div>
-        <div class="game-body">
-          <h3>Memory Matrix</h3>
-          <p>מצא את כל זוגות הקלפים ובדוק כמה טוב הזיכרון שלך.</p>
-          <div class="game-foot">
-            <span class="pill">זיכרון</span>
-            <button class="play" onclick="startGame('memory')">שחק עכשיו ←</button>
-          </div>
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-gamepad"></i> DEV<span>GAMES</span>
         </div>
-      </article>
+        <nav>
+            <ul>
+                <li><a href="#" class="active"><i class="fa-solid fa-crosshairs"></i> משחקים</a></li>
+                <li><a href="#"><i class="fa-solid fa-trophy"></i> מובילים</a></li>
+                <li><a href="#"><i class="fa-solid fa-layer-group"></i> קהילה</a></li>
+            </ul>
+        </nav>
+    </header>
 
-      <article class="game">
-        <div class="art blue"><span>⚡</span></div>
-        <div class="game-body">
-          <h3>Reflex Rush</h3>
-          <p>בדוק את מהירות התגובה שלך. לחץ ברגע שהמסך הופך לירוק!</p>
-          <div class="game-foot">
-            <span class="pill">זריזות</span>
-            <button class="play" onclick="startGame('reflex')">שחק עכשיו ←</button>
-          </div>
-        </div>
-      </article>
+    <div class="main-container">
+        
+        <!-- Game Display Stage -->
+        <main class="game-section">
+            <div class="game-header">
+                <div class="game-title-area">
+                    <h1>RED VECTOR: SUPERHOT 3D</h1>
+                    <p>משחק יריות אקשן בסגנון Low-Poly - חסל את האויבים הניאוניים האדומים</p>
+                </div>
+                <div class="game-badges">
+                    <span class="badge"><i class="fa-solid fa-bolt"></i> 60 FPS</span>
+                    <span class="badge"><i class="fa-solid fa-gun"></i> Low-Poly 3D</span>
+                </div>
+            </div>
 
-      <article class="game">
-        <div class="art orange"><span>🔮</span></div>
-        <div class="game-body">
-          <h3>Number Hunter</h3>
-          <p>נחש את המספר הסודי בעזרת רמזים ונסה לנצח בכמה שפחות ניסיונות.</p>
-          <div class="game-foot">
-            <span class="pill">חשיבה</span>
-            <button class="play" onclick="startGame('number')">שחק עכשיו ←</button>
-          </div>
-        </div>
-      </article>
+            <div id="game-wrapper">
+                <canvas id="gameCanvas"></canvas>
+
+                <!-- UI Dynamic HUD Overlay -->
+                <div class="game-overlay">
+                    <div class="hud-top">
+                        <div class="stat-box">
+                            <div class="stat-label">
+                                <span><i class="fa-solid fa-heart" style="color: var(--accent-red)"></i> בריאות</span>
+                                <span id="hp-text">100 HP</span>
+                            </div>
+                            <div class="bar-container">
+                                <div id="hp-bar" class="bar-fill hp-fill"></div>
+                            </div>
+                            
+                            <div class="stat-label">
+                                <span><i class="fa-solid fa-shield-halved" style="color: var(--accent-cyan)"></i> מגן</span>
+                                <span id="shield-text">50 SHIELD</span>
+                            </div>
+                            <div class="bar-container">
+                                <div id="shield-bar" class="bar-fill shield-fill" style="width: 50%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="score-display">
+                            <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">ניקוד</div>
+                            <span id="score-val">00000</span>
+                        </div>
+                    </div>
+
+                    <div class="hud-bottom">
+                        <div class="weapons-selector">
+                            <div class="weapon-card active" id="wep-1">
+                                <span>1</span> אקדח
+                            </div>
+                            <div class="weapon-card" id="wep-2">
+                                <span>2</span> שוטגאן
+                            </div>
+                            <div class="weapon-card" id="wep-3">
+                                <span>3</span> רובה סער
+                            </div>
+                        </div>
+
+                        <div class="ammo-box">
+                            <div class="reload-indicator" id="reload-text"></div>
+                            <div class="ammo-count"><span id="ammo-clip">12</span>/<span id="ammo-reserve">∞</span></div>
+                            <div style="font-size: 0.65rem; color: var(--text-muted);">תחמושת [R לטעינה]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Start Screen -->
+                <div class="screen-overlay" id="start-screen">
+                    <h2>RED VECTOR 3D</h2>
+                    <p>הילחם בדמויות האדומות, החלף נשקים בזמן אמת, טען תחמושת ושרוד כמה שיותר גלים!</p>
+                    <button class="btn-play" onclick="startGame()">התחל משחק <i class="fa-solid fa-play"></i></button>
+                </div>
+
+                <!-- Game Over Screen -->
+                <div class="screen-overlay" id="gameover-screen" style="display: none;">
+                    <h2 style="color: var(--accent-red);">נפסלת!</h2>
+                    <p>הגעת לניקוד סופי של: <strong id="final-score" style="color: var(--accent-gold); font-size: 1.5rem;">0</strong></p>
+                    <button class="btn-play" onclick="startGame()">נגן שוב <i class="fa-solid fa-rotate-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Controls Info -->
+            <div class="controls-bar">
+                <span><kbd>WASD</kbd> / <kbd>חצים</kbd> תנועה</span>
+                <span><kbd>עכבר</kbd> כיוון וירי</span>
+                <span><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> החלפת נשק</span>
+                <span><kbd>R</kbd> טעינת מחסנית</span>
+            </div>
+        </main>
+
+        <!-- Sidebar / Leaderboards -->
+        <aside class="sidebar">
+            <div class="panel-card">
+                <div class="panel-title">
+                    <i class="fa-solid fa-trophy" style="color: var(--accent-gold);"></i> טבלת שיאים
+                </div>
+                <ul class="leaderboard-list">
+                    <li class="leaderboard-item">
+                        <span class="rank">#1</span>
+                        <span>CyberPro_99</span>
+                        <span class="score">14,250</span>
+                    </li>
+                    <li class="leaderboard-item">
+                        <span class="rank">#2</span>
+                        <span>ShadowGamer</span>
+                        <span class="score">11,800</span>
+                    </li>
+                    <li class="leaderboard-item">
+                        <span class="rank">#3</span>
+                        <span>PixelKing</span>
+                        <span class="score">9,400</span>
+                    </li>
+                    <li class="leaderboard-item">
+                        <span class="rank">#4</span>
+                        <span>RedNinja</span>
+                        <span class="score">7,150</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="panel-card">
+                <div class="panel-title">
+                    <i class="fa-solid fa-circle-info" style="color: var(--accent-cyan);"></i> טיפים למשחק
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">
+                    • רובה הציד (2) מעולה מטווח קרוב מול קבוצות אויבים.<br>
+                    • הקפד לטעון נשק (<kbd>R</kbd>) בין גלי האויבים.<br>
+                    • מגן האנרגיה מגן עליך מפגיעות ישירות ומתחדש לאט.
+                </p>
+            </div>
+        </aside>
+
     </div>
-  </section>
 
-  <section id="features">
-    <div class="section-head">
-      <div>
-        <h2>למה DevGames?</h2>
-        <p>בנוי בשביל חוויית משחק פשוטה וכיפית.</p>
-      </div>
-    </div>
-    <div class="features">
-      <div class="feature">
-        <div class="icon">🏆</div>
-        <h3>צבור XP</h3>
-        <p>קבל נקודות על ניצחונות והתקדם בכל משחק.</p>
-      </div>
-      <div class="feature">
-        <div class="icon">💾</div>
-        <h3>שמור שיאים</h3>
-        <p>הניקוד נשמר בדפדפן שלך גם לאחר רענון הדף.</p>
-      </div>
-      <div class="feature">
-        <div class="icon">🌌</div>
-        <h3>עיצוב מתקדם</h3>
-        <p>ממשק כהה, אפקטים זוהרים והתאמה לטלפון ולמחשב.</p>
-      </div>
-    </div>
-  </section>
-</main>
+    <script>
+        /* === GAME LOGIC & ENGINE === */
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
 
-<footer>
-  <div class="logo">Dev<span>Games</span></div>
-  <p>Play beyond limits. Built for gamers, by developers.</p>
-  <small>© 2026 DevGames · Made with 💜</small>
-</footer>
+        // Audio Synth Context
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
 
-<div id="modal">
-  <div class="window">
-    <div class="window-top">
-      <h2 id="gameTitle">Game</h2>
-      <button class="close" onclick="closeGame()">✕ סגור</button>
-    </div>
-    <div id="gameArea"></div>
-    <div id="message" aria-live="polite"></div>
-  </div>
-</div>
+        function playSound(type) {
+            if (!audioCtx) audioCtx = new AudioContext();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
 
-<script>
-const $ = id => document.getElementById(id);
-let xp = Number(localStorage.getItem('devgames-xp')) || 0;
-let bestReflex = Number(localStorage.getItem('devgames-reflex')) || 0;
-let timer = null;
-let startTime = 0;
-let ready = false;
-let locked = false;
-let secret = 0;
-let attempts = 0;
-let firstCard = null;
-let matches = 0;
-let memoryMoves = 0;
+            if (type === 'shoot') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.1);
+            } else if (type === 'hit') {
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.15);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.15);
+            } else if (type === 'reload') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                osc.frequency.linearRampToValueAtTime(800, audioCtx.currentTime + 0.2);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.2);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.2);
+            }
+        }
 
-function updateXP(points) {
-  xp += points;
-  localStorage.setItem('devgames-xp', xp);
-  $('totalScore').textContent = xp;
-}
-updateXP(0);
+        // Canvas Sizing
+        function resizeCanvas() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-function closeGame() {
-  $('modal').classList.remove('open');
-  clearTimeout(timer);
-  ready = false;
-  locked = false;
-}
+        // Inputs
+        const keys = {};
+        const mouse = { x: canvas.width / 2, y: canvas.height / 2, isDown: false };
 
-function startGame(type) {
-  clearTimeout(timer);
-  $('modal').classList.add('open');
-  $('message').textContent = '';
-  if (type === 'memory') memoryGame();
-  if (type === 'reflex') reflexGame();
-  if (type === 'number') numberGame();
-}
+        window.addEventListener('keydown', e => {
+            keys[e.key.toLowerCase()] = true;
+            if (e.key === '1') selectWeapon(0);
+            if (e.key === '2') selectWeapon(1);
+            if (e.key === '3') selectWeapon(2);
+            if (e.key.toLowerCase() === 'r') reloadWeapon();
+        });
+        window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
 
-function memoryGame() {
-  $('gameTitle').textContent = '🧠 Memory Matrix';
-  firstCard = null;
-  matches = 0;
-  memoryMoves = 0;
-  locked = false;
+        canvas.addEventListener('mousemove', e => {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left;
+            mouse.y = e.clientY - rect.top;
+        });
 
-  const symbols = ['🚀','👾','💎','🔥','🎮','🌙','⚡','🪐'];
-  const deck = [...symbols,...symbols].sort(() => Math.random() - 0.5);
+        canvas.addEventListener('mousedown', () => {
+            mouse.isDown = true;
+            shoot();
+        });
+        canvas.addEventListener('mouseup', () => mouse.isDown = false);
 
-  $('gameArea').innerHTML = `
-    <p>מצא את כל שמונת הזוגות. נסה לסיים בכמה שפחות מהלכים!</p>
-    <p>מהלכים: <b id="moves">0</b> · זוגות: <b id="pairs">0</b>/8</p>
-    <div class="memory-grid" id="memoryGrid"></div>
-    <button class="secondary" onclick="memoryGame()">🔄 משחק חדש</button>
-  `;
+        // Weapon Configurations
+        const WEAPONS = [
+            { name: 'Pistol', maxAmmo: 12, fireRate: 250, damage: 35, spread: 0.05, count: 1, reloadTime: 1200 },
+            { name: 'Shotgun', maxAmmo: 6, fireRate: 650, damage: 22, spread: 0.22, count: 6, reloadTime: 1800 },
+            { name: 'Rifle', maxAmmo: 30, fireRate: 110, damage: 18, spread: 0.08, count: 1, reloadTime: 1500 }
+        ];
 
-  deck.forEach(symbol => {
-    const btn = document.createElement('button');
-    btn.className = 'memory-card';
-    btn.textContent = '?';
-    btn.dataset.symbol = symbol;
-    btn.setAttribute('aria-label', 'קלף מוסתר');
-    btn.onclick = () => flipCard(btn);
-    $('memoryGrid').appendChild(btn);
-  });
-}
+        // Game State
+        let isRunning = false;
+        let score = 0;
+        let hp = 100;
+        let shield = 50;
+        let currentWeaponIdx = 0;
+        let currentAmmo = WEAPONS[0].maxAmmo;
+        let isReloading = false;
+        let lastShotTime = 0;
+        let cameraOffset = { x: 0, y: 0 };
 
-function flipCard(card) {
-  if (locked || card.disabled || card === firstCard) return;
-  card.textContent = card.dataset.symbol;
-  card.disabled = true;
-  card.setAttribute('aria-label', card.dataset.symbol);
+        // Entities
+        const player = { x: 0, y: 0, radius: 20, speed: 4 };
+        let enemies = [];
+        let bullets = [];
+        let particles = [];
 
-  if (!firstCard) {
-    firstCard = card;
-    return;
-  }
+        function selectWeapon(index) {
+            if (isReloading || currentWeaponIdx === index) return;
+            currentWeaponIdx = index;
+            currentAmmo = WEAPONS[index].maxAmmo;
+            updateHUD();
+            
+            document.querySelectorAll('.weapon-card').forEach((el, i) => {
+                el.classList.toggle('active', i === index);
+            });
+        }
 
-  memoryMoves++;
-  $('moves').textContent = memoryMoves;
+        function reloadWeapon() {
+            if (isReloading || currentAmmo === WEAPONS[currentWeaponIdx].maxAmmo) return;
+            isReloading = true;
+            document.getElementById('reload-text').innerText = 'טוען...';
+            playSound('reload');
 
-  if (firstCard.dataset.symbol === card.dataset.symbol) {
-    matches++;
-    $('pairs').textContent = matches;
-    firstCard = null;
+            setTimeout(() => {
+                currentAmmo = WEAPONS[currentWeaponIdx].maxAmmo;
+                isReloading = false;
+                document.getElementById('reload-text').innerText = '';
+                updateHUD();
+            }, WEAPONS[currentWeaponIdx].reloadTime);
+        }
 
-    if (matches === 8) {
-      const points = Math.max(10, 100 - memoryMoves);
-      updateXP(points);
-      $('message').textContent = `🎉 ניצחת! קיבלת ${points} XP`;
-    }
-  } else {
-    locked = true;
-    const previous = firstCard;
-    firstCard = null;
+        function startGame() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('gameover-screen').style.display = 'none';
+            
+            player.x = canvas.width / 2;
+            player.y = canvas.height / 2;
+            hp = 100;
+            shield = 50;
+            score = 0;
+            enemies = [];
+            bullets = [];
+            particles = [];
+            currentWeaponIdx = 0;
+            currentAmmo = WEAPONS[0].maxAmmo;
+            isReloading = false;
+            
+            updateHUD();
+            isRunning = true;
+            requestAnimationFrame(gameLoop);
+        }
 
-    timer = setTimeout(() => {
-      previous.disabled = false;
-      card.disabled = false;
-      previous.textContent = '?';
-      card.textContent = '?';
-      previous.setAttribute('aria-label', 'קלף מוסתר');
-      card.setAttribute('aria-label', 'קלף מוסתר');
-      locked = false;
-    }, 800);
-  }
-}
+        function gameOver() {
+            isRunning = false;
+            document.getElementById('final-score').innerText = score.toLocaleString();
+            document.getElementById('gameover-screen').style.display = 'flex';
+        }
 
-function reflexGame() {
-  $('gameTitle').textContent = '⚡ Reflex Rush';
-  ready = false;
-  locked = false;
+        function updateHUD() {
+            document.getElementById('hp-bar').style.width = hp + '%';
+            document.getElementById('hp-text').innerText = Math.max(0, Math.floor(hp)) + ' HP';
+            document.getElementById('shield-bar').style.width = (shield * 2) + '%';
+            document.getElementById('shield-text').innerText = Math.max(0, Math.floor(shield)) + ' SHIELD';
+            document.getElementById('score-val').innerText = score.toString().padStart(5, '0');
+            document.getElementById('ammo-clip').innerText = currentAmmo;
+        }
 
-  $('gameArea').innerHTML = `
-    <p>לחץ על הכפתור כדי להתחיל. כשהוא יהפוך לירוק, לחץ מהר ככל האפשר!</p>
-    <div class="big-number" id="reflexDisplay">⚡</div>
-    <button class="primary" id="reflexBtn" style="width:100%;margin:15px 0"
-      onclick="reflexClick()">התחל אתגר</button>
-    <p>השיא שלך: <b id="bestReflex">${bestReflex ? bestReflex + ' ms' : 'עדיין אין שיא'}</b></p>
-  `;
-}
+        function shoot() {
+            if (!isRunning || isReloading) return;
+            const now = Date.now();
+            const wep = WEAPONS[currentWeaponIdx];
 
-function reflexClick() {
-  const btn = $('reflexBtn');
-  if (!ready && !locked) {
-    locked = true;
-    btn.textContent = '⏳ המתן לאור הירוק...';
-    btn.style.background = '#b45309';
-    $('reflexDisplay').textContent = '⌛';
+            if (now - lastShotTime < wep.fireRate) return;
+            if (currentAmmo <= 0) {
+                reloadWeapon();
+                return;
+            }
 
-    timer = setTimeout(() => {
-      ready = true;
-      locked = false;
-      startTime = performance.now();
-      btn.textContent = '🟢 לחץ עכשיו!';
-      btn.style.background = '#16a34a';
-      $('reflexDisplay').textContent = 'GO!';
-    }, 1500 + Math.random() * 3000);
-    return;
-  }
+            lastShotTime = now;
+            currentAmmo--;
+            updateHUD();
+            playSound('shoot');
 
-  if (locked) return;
+            // Screen Recoil Shake
+            cameraOffset.x += (Math.random() - 0.5) * 6;
+            cameraOffset.y += (Math.random() - 0.5) * 6;
 
-  if (ready) {
-    const elapsed = Math.round(performance.now() - startTime);
-    ready = false;
-    btn.textContent = `זמן תגובה: ${elapsed} ms`;
-    btn.style.background = '#7c3aed';
-    $('reflexDisplay').textContent = elapsed + ' ms';
+            const baseAngle = Math.atan2(mouse.y - player.y, mouse.x - player.x);
 
-    let points = elapsed < 250 ? 50 : elapsed < 400 ? 25 : 10;
-    updateXP(points);
+            for (let i = 0; i < wep.count; i++) {
+                const angle = baseAngle + (Math.random() - 0.5) * wep.spread;
+                bullets.push({
+                    x: player.x,
+                    y: player.y,
+                    vx: Math.cos(angle) * 14,
+                    vy: Math.sin(angle) * 14,
+                    damage: wep.damage,
+                    life: 60
+                });
+            }
+        }
 
-    if (!bestReflex || elapsed < bestReflex) {
-      bestReflex = elapsed;
-      localStorage.setItem('devgames-reflex', bestReflex);
-      $('bestReflex').textContent = bestReflex + ' ms';
-    }
-    $('message').textContent = `קיבלת ${points} XP! לחץ שוב לניסיון נוסף.`;
-    locked = true;
-    return;
-  }
-}
+        // Enemy Spawner
+        let lastSpawn = 0;
+        function spawnEnemy() {
+            const now = Date.now();
+            if (now - lastSpawn > 1200) {
+                lastSpawn = now;
+                const angle = Math.random() * Math.PI * 2;
+                const dist = Math.max(canvas.width, canvas.height) / 2 + 50;
+                enemies.push({
+                    x: player.x + Math.cos(angle) * dist,
+                    y: player.y + Math.sin(angle) * dist,
+                    hp: 50,
+                    maxHp: 50,
+                    speed: 1.8 + Math.random() * 0.8,
+                    animFrame: 0
+                });
+            }
+        }
 
-function numberGame() {
-  $('gameTitle').textContent = '🔮 Number Hunter';
-  secret = Math.floor(Math.random() * 100) + 1;
-  attempts = 0;
+        function update() {
+            // Player Movement
+            if (keys['w'] || keys['arrowup']) player.y -= player.speed;
+            if (keys['s'] || keys['arrowdown']) player.y += player.speed;
+            if (keys['a'] || keys['arrowleft']) player.x -= player.speed;
+            if (keys['d'] || keys['arrowright']) player.x += player.speed;
 
-  $('gameArea').innerHTML = `
-    <p>אני חושב על מספר בין 1 ל־100. האם תצליח למצוא אותו?</p>
-    <form id="guessForm">
-      <input id="guessInput" type="number" min="1" max="100"
-        placeholder="הכנס מספר..." required />
-      <button class="primary" type="submit" style="width:100%">בדוק ניחוש</button>
-    </form>
-    <p>ניסיונות: <b id="attemptCount">0</b></p>
-    <button class="secondary" onclick="numberGame()">🔄 התחל מחדש</button>
-  `;
+            // Boundaries
+            player.x = Math.max(20, Math.min(canvas.width - 20, player.x));
+            player.y = Math.max(20, Math.min(canvas.height - 20, player.y));
 
-  $('guessForm').onsubmit = e => {
-    e.preventDefault();
-    const input = $('guessInput');
-    const guess = Number(input.value);
-    if (!Number.isInteger(guess) || guess < 1 || guess > 100) return;
+            // Continuous Fire for Automatic Rifle
+            if (mouse.isDown && currentWeaponIdx === 2) shoot();
 
-    attempts++;
-    $('attemptCount').textContent = attempts;
+            // Smooth Camera Recovery
+            cameraOffset.x *= 0.85;
+            cameraOffset.y *= 0.85;
 
-    if (guess === secret) {
-      const points = Math.max(10, 110 - attempts * 10);
-      updateXP(points);
-      $('message').textContent = `🎉 צדקת! המספר היה ${secret}. קיבלת ${points} XP!`;
-      $('guessForm').querySelector('button').disabled = true;
-      input.disabled = true;
-    } else {
-      $('message').textContent = guess < secret ? '📈 המספר הסודי גדול יותר!' : '📉 המספר הסודי קטן יותר!';
-      input.value = '';
-      input.focus();
-    }
-  };
-}
+            // Update Bullets
+            bullets.forEach((b, i) => {
+                b.x += b.vx;
+                b.y += b.vy;
+                b.life--;
+                if (b.life <= 0) bullets.splice(i, 1);
+            });
 
-$('modal').addEventListener('click', e => {
-  if (e.target === $('modal')) closeGame();
-});
+            // Update Enemies
+            spawnEnemy();
+            enemies.forEach((enemy, ei) => {
+                const angle = Math.atan2(player.y - enemy.y, player.x - enemy.x);
+                enemy.x += Math.cos(angle) * enemy.speed;
+                enemy.y += Math.sin(angle) * enemy.speed;
+                enemy.animFrame += 0.1;
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeGame();
-});
-</script>
+                // Collision with Bullets
+                bullets.forEach((bullet, bi) => {
+                    const dist = Math.hypot(bullet.x - enemy.x, bullet.y - enemy.y);
+                    if (dist < 22) {
+                        enemy.hp -= bullet.damage;
+                        playSound('hit');
+
+                        // Particle Effect
+                        for (let p = 0; p < 4; p++) {
+                            particles.push({
+                                x: enemy.x, y: enemy.y,
+                                vx: (Math.random() - 0.5) * 6,
+                                vy: (Math.random() - 0.5) * 6,
+                                color: '#ff2a55',
+                                life: 20
+                            });
+                        }
+
+                        bullets.splice(bi, 1);
+                    }
+                });
+
+                // Enemy Death
+                if (enemy.hp <= 0) {
+                    score += 150;
+                    updateHUD();
+                    enemies.splice(ei, 1);
+                }
+
+                // Player Hit Collision
+                const pDist = Math.hypot(player.x - enemy.x, player.y - enemy.y);
+                if (pDist < 25) {
+                    if (shield > 0) {
+                        shield -= 0.5;
+                    } else {
+                        hp -= 0.8;
+                    }
+                    updateHUD();
+                    if (hp <= 0) gameOver();
+                }
+            });
+
+            // Update Particles
+            particles.forEach((p, i) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life--;
+                if (p.life <= 0) particles.splice(i, 1);
+            });
+        }
+
+        /* === LOW-POLY RED ENEMY DRAWING === */
+        function drawRedEnemy(x, y, angle, frame) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+
+            // Red SUPERHOT Style Poly Silhouette
+            ctx.fillStyle = '#ff2a55';
+            ctx.strokeStyle = '#a30021';
+            ctx.lineWidth = 2;
+
+            // Head
+            ctx.beginPath();
+            ctx.polygon ? ctx.polygon(0, 0) : null;
+            ctx.arc(0, -14, 7, 0, Math.PI * 2);
+            ctx.fill(); ctx.stroke();
+
+            // Torso & Arms with Gun
+            ctx.beginPath();
+            ctx.moveTo(-10, -5);
+            ctx.lineTo(10, -5);
+            ctx.lineTo(6, 12);
+            ctx.lineTo(-6, 12);
+            ctx.closePath();
+            ctx.fill(); ctx.stroke();
+
+            // Arms holding Low-Poly Gun
+            const armOffset = Math.sin(frame) * 3;
+            ctx.fillStyle = '#cc0033';
+            ctx.fillRect(6, -2 + armOffset, 12, 4);
+            ctx.fillStyle = '#222';
+            ctx.fillRect(16, -1 + armOffset, 8, 3); // Enemy Pistol
+
+            // Animated Legs
+            ctx.strokeStyle = '#ff2a55';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(-4, 12);
+            ctx.lineTo(-6 + Math.sin(frame) * 6, 24);
+            ctx.moveTo(4, 12);
+            ctx.lineTo(6 - Math.sin(frame) * 6, 24);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        /* === FIRST-PERSON / LOW-POLY WEAPON RENDERING === */
+        function drawPlayerWeapon() {
+            ctx.save();
+            const angle = Math.atan2(mouse.y - player.y, mouse.x - player.x);
+            
+            // Draw Player Center Dot & Aim Line
+            ctx.strokeStyle = 'rgba(0, 240, 255, 0.3)';
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(player.x, player.y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Draw Player Character Body
+            ctx.fillStyle = '#00f0ff';
+            ctx.shadowColor = '#00f0ff';
+            ctx.shadowBlur = 12;
+            ctx.beginPath();
+            ctx.arc(player.x, player.y, 14, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Gun Projection attached to Player
+            ctx.translate(player.x, player.y);
+            ctx.rotate(angle);
+            ctx.shadowBlur = 0;
+
+            // Weapon 3D Vector rendering based on selected weapon
+            if (currentWeaponIdx === 0) { // Pistol
+                ctx.fillStyle = '#2a324d';
+                ctx.fillRect(8, -3, 16, 6);
+                ctx.fillStyle = '#121624';
+                ctx.fillRect(20, -2, 6, 4);
+            } else if (currentWeaponIdx === 1) { // Shotgun
+                ctx.fillStyle = '#3a4466';
+                ctx.fillRect(6, -5, 24, 10);
+                ctx.fillStyle = '#ffb700';
+                ctx.fillRect(24, -3, 8, 6);
+            } else { // Rifle
+                ctx.fillStyle = '#1e2538';
+                ctx.fillRect(4, -4, 30, 8);
+                ctx.fillStyle = '#00f0ff';
+                ctx.fillRect(14, 2, 6, 8); // Magazine
+            }
+
+            ctx.restore();
+        }
+
+        function render() {
+            ctx.save();
+            ctx.translate(cameraOffset.x, cameraOffset.y);
+
+            // Background Grid
+            ctx.fillStyle = '#08090e';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+            ctx.lineWidth = 1;
+            const gridSize = 40;
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+            }
+
+            // Draw Particles
+            particles.forEach(p => {
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, 4, 4);
+            });
+
+            // Draw Bullets
+            ctx.fillStyle = '#ffb700';
+            ctx.shadowColor = '#ffb700';
+            ctx.shadowBlur = 8;
+            bullets.forEach(b => {
+                ctx.beginPath();
+                ctx.arc(b.x, b.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.shadowBlur = 0;
+
+            // Draw Enemies
+            enemies.forEach(enemy => {
+                const angle = Math.atan2(player.y - enemy.y, player.x - enemy.x);
+                drawRedEnemy(enemy.x, enemy.y, angle, enemy.animFrame);
+            });
+
+            // Draw Player & Weapon
+            drawPlayerWeapon();
+
+            // Custom Crosshair
+            ctx.strokeStyle = '#00f0ff';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(mouse.x, mouse.y, 8, 0, Math.PI * 2);
+            ctx.moveTo(mouse.x - 12, mouse.y); ctx.lineTo(mouse.x + 12, mouse.y);
+            ctx.moveTo(mouse.x, mouse.y - 12); ctx.lineTo(mouse.x, mouse.y + 12);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        function gameLoop() {
+            if (!isRunning) return;
+            update();
+            render();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Initial Render Call for Screen Preview
+        render();
+    </script>
 </body>
 </html>
