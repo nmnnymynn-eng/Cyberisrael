@@ -4,16 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XOSINT - Cyber Intelligence Hub</title>
-    <!-- טעינת פונט Ultra בדיוק כמו שביקשת -->
-    <link href="https://fonts.googleapis.com/css2?family=Ultra&display=swap" rel="stylesheet">
+    <!-- Heavy Bold Typography: Ultra & Rubik Black matching user reference -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Black&family=Ultra&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
             --neon-blue: #00f3ff;
             --neon-green: #00ff66;
+            --neon-orange: #ff5500;
             --dark-bg: #010409;
-            --panel-bg: rgba(2, 12, 28, 0.88);
-            --border-color: rgba(0, 243, 255, 0.45);
-            --border-green: rgba(0, 255, 102, 0.5);
+            --panel-bg: rgba(3, 15, 30, 0.92);
+            --border-blue: rgba(0, 243, 255, 0.6);
+            --border-green: rgba(0, 255, 102, 0.6);
         }
 
         body {
@@ -21,10 +25,15 @@
             padding: 0;
             background-color: var(--dark-bg);
             color: #ffffff;
-            font-family: 'Ultra', serif;
+            font-family: 'Ultra', 'Rubik Black', impact, sans-serif;
             overflow-x: hidden;
             user-select: none;
             letter-spacing: 1px;
+        }
+
+        .heavy-font {
+            font-family: 'Ultra', 'Rubik Black', sans-serif;
+            text-transform: uppercase;
         }
 
         #bg-canvas {
@@ -34,116 +43,159 @@
             width: 100vw;
             height: 100vh;
             z-index: -1;
+            background: #010409;
         }
 
-        /* מסך כניסה מאובטח */
+        /* Ultra High-End Cyberpunk Login Screen */
         #login-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(1, 4, 9, 0.96);
+            background: radial-gradient(circle at center, rgba(2, 14, 30, 0.96) 0%, rgba(1, 4, 9, 0.99) 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 1000;
             backdrop-filter: blur(25px);
-            transition: opacity 0.6s ease;
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .login-box {
-            background: var(--panel-bg);
-            border: 2px solid var(--neon-blue);
-            padding: 50px 40px;
-            border-radius: 16px;
+        .lock-card {
+            background: linear-gradient(145deg, rgba(3, 18, 38, 0.95), rgba(1, 8, 20, 0.98));
+            border: 3px solid var(--neon-blue);
+            padding: 60px 50px;
+            border-radius: 28px;
             text-align: center;
-            box-shadow: 0 0 50px rgba(0, 243, 255, 0.3);
-            width: 380px;
+            box-shadow: 0 0 90px rgba(0, 243, 255, 0.4), inset 0 0 30px rgba(0, 243, 255, 0.2);
+            width: 460px;
+            max-width: 92vw;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lock-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 243, 255, 0.08), transparent);
+            transform: rotate(45deg);
+            animation: scanline 4s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(-100%) rotate(45deg); }
+            100% { transform: translateY(100%) rotate(45deg); }
         }
 
         .logo-container {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 20px auto;
-            filter: drop-shadow(0 0 15px rgba(0, 255, 102, 0.7));
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 25px auto;
+            filter: drop-shadow(0 0 25px rgba(0, 255, 102, 0.8));
             animation: pulseLogo 3s infinite alternate;
         }
 
         @keyframes pulseLogo {
-            0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(0, 255, 102, 0.5)); }
-            100% { transform: scale(1.05); filter: drop-shadow(0 0 25px rgba(0, 243, 255, 0.9)); }
+            0% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(0, 255, 102, 0.6)); }
+            100% { transform: scale(1.08); filter: drop-shadow(0 0 35px rgba(0, 243, 255, 0.95)); }
         }
 
-        .login-box h2 {
+        .lock-title {
+            color: #ff5500; /* Matching the orange from reference image */
+            font-size: 44px;
+            line-height: 1;
+            margin: 0 0 10px 0;
+            letter-spacing: 5px;
+            text-shadow: 0 0 25px rgba(255, 85, 0, 0.8), 0 0 50px rgba(255, 85, 0, 0.4);
+        }
+
+        .lock-subtitle {
             color: var(--neon-blue);
-            margin: 0 0 5px 0;
-            letter-spacing: 3px;
-            font-size: 26px;
-            text-shadow: 0 0 12px rgba(0, 243, 255, 0.6);
+            font-size: 12px;
+            margin-bottom: 40px;
+            letter-spacing: 4px;
+            text-shadow: 0 0 12px rgba(0, 243, 255, 0.7);
         }
 
-        .login-box p {
-            color: var(--neon-green);
-            font-size: 10px;
-            margin-bottom: 30px;
-            letter-spacing: 2px;
+        .passcode-wrapper {
+            position: relative;
+            margin-bottom: 25px;
         }
 
         .login-input {
             width: 100%;
-            background: #000;
-            border: 2px solid var(--neon-blue);
+            background: #000612;
+            border: 2px solid var(--border-blue);
             color: var(--neon-green);
-            padding: 16px;
-            border-radius: 8px;
-            font-size: 18px;
+            padding: 20px;
+            border-radius: 14px;
+            font-size: 24px;
             text-align: center;
-            font-family: 'Ultra', serif;
-            margin-bottom: 20px;
             outline: none;
             box-sizing: border-box;
-            letter-spacing: 3px;
-            box-shadow: inset 0 0 12px rgba(0, 243, 255, 0.25);
+            letter-spacing: 8px;
+            box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.3);
+            transition: all 0.3s ease;
         }
 
-        .login-btn {
+        .login-input:focus {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 35px rgba(0, 255, 102, 0.6), inset 0 0 20px rgba(0, 255, 102, 0.3);
+        }
+
+        /* Framed Button Styling */
+        .framed-btn {
             width: 100%;
-            background: linear-gradient(135deg, #003366, #00f3ff);
-            color: #000;
-            border: none;
-            padding: 16px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-family: 'Ultra', serif;
-            font-size: 14px;
+            background: linear-gradient(135deg, rgba(0, 85, 255, 0.2), rgba(0, 243, 255, 0.3));
+            color: var(--neon-blue);
+            border: 2px solid var(--neon-blue);
+            padding: 18px;
+            border-radius: 14px;
+            font-size: 16px;
             cursor: pointer;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            transition: 0.25s;
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+            letter-spacing: 3px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.35), inset 0 0 10px rgba(0, 243, 255, 0.2);
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.8);
         }
 
-        .login-btn:hover {
-            background: var(--neon-green);
-            box-shadow: 0 0 35px var(--neon-green);
-            transform: translateY(-2px);
+        .framed-btn:hover {
+            background: linear-gradient(135deg, rgba(0, 255, 102, 0.3), rgba(0, 243, 255, 0.4));
+            color: var(--neon-green);
+            border-color: var(--neon-green);
+            box-shadow: 0 0 50px rgba(0, 255, 102, 0.7), inset 0 0 20px rgba(0, 255, 102, 0.4);
+            transform: translateY(-3px) scale(1.02);
+            text-shadow: 0 0 15px rgba(0, 255, 102, 0.9);
         }
 
         .error-msg {
-            color: #ff3333;
-            font-size: 11px;
-            margin-top: 15px;
+            color: #ff3344;
+            font-size: 13px;
+            margin-top: 20px;
             display: none;
-            letter-spacing: 1px;
-            text-shadow: 0 0 8px rgba(255, 51, 51, 0.5);
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 51, 68, 0.8);
+            animation: shake 0.4s ease-in-out;
         }
 
-        /* האפליקציה הראשית */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        /* Main Workspace */
         #main-app {
             display: none;
-            padding: 30px;
+            padding: 35px;
             max-width: 1450px;
             margin: 0 auto;
         }
@@ -152,90 +204,55 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-            background: rgba(1, 8, 18, 0.6);
-            backdrop-filter: blur(10px);
-            padding: 15px 20px;
-            border-radius: 12px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-        }
-
-        .brand-logo-small {
-            width: 50px;
-            height: 50px;
-            filter: drop-shadow(0 0 10px rgba(0, 255, 102, 0.6));
+            border: 2px solid var(--border-blue);
+            background: rgba(2, 14, 30, 0.88);
+            backdrop-filter: blur(15px);
+            padding: 22px 32px;
+            border-radius: 20px;
+            margin-bottom: 35px;
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.25);
         }
 
         .brand h1 {
             margin: 0;
-            font-size: 30px;
-            letter-spacing: 4px;
-            color: var(--neon-blue);
-            text-shadow: 0 0 15px rgba(0, 243, 255, 0.6);
-        }
-
-        .brand span {
-            font-size: 10px;
-            color: var(--neon-green);
-            letter-spacing: 3px;
-        }
-
-        .status-badge {
-            background: rgba(0, 243, 255, 0.12);
-            border: 1px solid var(--neon-blue);
-            color: var(--neon-blue);
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-size: 11px;
-            letter-spacing: 2px;
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
-        }
-
-        .nav-tools {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
+            font-size: 36px;
+            letter-spacing: 6px;
+            color: #ff5500;
+            text-shadow: 0 0 20px rgba(255, 85, 0, 0.8);
         }
 
         .tool-tab {
             background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            color: #8ab4f8;
-            padding: 14px 26px;
-            border-radius: 8px;
+            border: 2px solid var(--border-blue);
+            color: #94a3b8;
+            padding: 16px 28px;
+            border-radius: 14px;
             cursor: pointer;
-            font-family: 'Ultra', serif;
-            font-size: 12px;
-            letter-spacing: 1.5px;
-            transition: all 0.25s ease;
-            backdrop-filter: blur(10px);
+            font-size: 13px;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
         }
 
         .tool-tab:hover, .tool-tab.active {
-            background: rgba(0, 243, 255, 0.2);
-            border-color: var(--neon-blue);
-            color: var(--neon-blue);
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.5);
-            transform: translateY(-2px);
+            background: rgba(0, 243, 255, 0.22);
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+            box-shadow: 0 0 35px rgba(0, 255, 102, 0.5);
+            transform: translateY(-3px);
+            text-shadow: 0 0 10px rgba(0, 255, 102, 0.8);
         }
 
         .workspace {
             background: var(--panel-bg);
-            border: 2px solid var(--border-color);
-            border-radius: 14px;
-            padding: 40px;
-            box-shadow: 0 0 50px rgba(0, 243, 255, 0.2);
-            min-height: 450px;
+            border: 2px solid var(--border-blue);
+            border-radius: 22px;
+            padding: 50px;
+            box-shadow: 0 0 70px rgba(0, 243, 255, 0.3);
+            min-height: 500px;
             position: relative;
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(20px);
         }
 
         .tool-panel {
@@ -246,141 +263,87 @@
             display: block;
         }
 
-        .panel-title {
-            color: var(--neon-blue);
-            font-size: 22px;
-            letter-spacing: 2px;
-            margin-top: 0;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            text-shadow: 0 0 12px rgba(0, 243, 255, 0.5);
-        }
-
-        .panel-desc {
-            color: #8ab4f8;
-            font-size: 12px;
-            margin-bottom: 30px;
-            letter-spacing: 1px;
-        }
-
-        .input-group {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
         .osint-input {
-            flex: 1;
-            background: #000408;
-            border: 2px solid var(--border-color);
+            background: #000612;
+            border: 2px solid var(--border-blue);
             color: var(--neon-green);
-            padding: 16px 22px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-family: 'Ultra', serif;
+            padding: 18px 24px;
+            border-radius: 14px;
+            font-size: 18px;
             outline: none;
-            transition: 0.25s;
-            box-shadow: inset 0 0 12px rgba(0, 243, 255, 0.15);
+            transition: 0.3s;
+            box-shadow: inset 0 0 15px rgba(0, 243, 255, 0.2);
         }
 
         .osint-input:focus {
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.4), inset 0 0 12px rgba(0, 243, 255, 0.25);
-        }
-
-        .action-btn {
-            background: linear-gradient(135deg, #002244, #00f3ff);
-            color: #000;
-            border: none;
-            padding: 0 35px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-family: 'Ultra', serif;
-            font-size: 13px;
-            cursor: pointer;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            transition: 0.25s;
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
-        }
-
-        .action-btn:hover {
-            background: var(--neon-blue);
-            box-shadow: 0 0 35px var(--neon-blue);
-            transform: translateY(-2px);
+            border-color: var(--neon-green);
+            box-shadow: 0 0 35px rgba(0, 255, 102, 0.5), inset 0 0 15px rgba(0, 255, 102, 0.3);
         }
 
         .results-box {
-            background: #000205;
+            background: #00030a;
             border: 2px solid var(--border-green);
-            border-radius: 8px;
-            padding: 25px;
-            font-size: 13px;
+            border-radius: 14px;
+            padding: 30px;
+            font-size: 14px;
             line-height: 1.8;
             color: var(--neon-green);
-            max-height: 350px;
+            max-height: 400px;
             overflow-y: auto;
             display: none;
-            box-shadow: inset 0 0 20px rgba(0, 255, 102, 0.12);
-            text-shadow: 0 0 5px rgba(0, 255, 102, 0.3);
-        }
-
-        .loading-spinner {
-            display: none;
-            color: var(--neon-blue);
-            margin-bottom: 20px;
-            letter-spacing: 2px;
-            font-size: 12px;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+            box-shadow: inset 0 0 25px rgba(0, 255, 102, 0.2);
+            text-shadow: 0 0 8px rgba(0, 255, 102, 0.5);
         }
     </style>
 </head>
 <body>
 
-    <!-- רקע אנימציית גלים תלת-ממדית כחולה (Wavy Grid) -->
     <canvas id="bg-canvas"></canvas>
 
-    <!-- מסך כניסה -->
     <div id="login-screen">
-        <div class="login-box">
+        <div class="lock-card heavy-font">
             <div class="logo-container">
                 <svg viewBox="0 0 200 200" width="100%" height="100%">
-                    <path d="M100,100 C80,60 40,70 30,100 C20,130 50,150 100,100 Z" fill="#00ff66" stroke="#013214" stroke-width="6"/>
-                    <path d="M100,100 C140,60 130,20 100,30 C70,40 50,70 100,100 Z" fill="#00e65c" stroke="#013214" stroke-width="6"/>
-                    <path d="M100,100 C120,140 160,130 170,100 C180,70 150,50 100,100 Z" fill="#00ff66" stroke="#013214" stroke-width="6"/>
-                    <path d="M100,100 C60,140 70,180 100,170 C130,160 150,130 100,100 Z" fill="#00cc52" stroke="#013214" stroke-width="6"/>
-                    <path d="M80,160 Q100,190 120,195 Q140,160 110,130 Z" fill="#00b347" stroke="#013214" stroke-width="5"/>
+                    <path d="M100,100 C80,60 40,70 30,100 C20,130 50,150 100,100 Z" fill="#ff5500" stroke="#003311" stroke-width="6"/>
+                    <path d="M100,100 C140,60 130,20 100,30 C70,40 50,70 100,100 Z" fill="#00f3ff" stroke="#003311" stroke-width="6"/>
+                    <path d="M100,100 C120,140 160,130 170,100 C180,70 150,50 100,100 Z" fill="#00ff66" stroke="#003311" stroke-width="6"/>
+                    <path d="M100,100 C60,140 70,180 100,170 C130,160 150,130 100,100 Z" fill="#ff5500" stroke="#003311" stroke-width="6"/>
+                    <path d="M80,160 Q100,190 120,195 Q140,160 110,130 Z" fill="#00f3ff" stroke="#003311" stroke-width="5"/>
                 </svg>
             </div>
-            <h2>XOSINT</h2>
-            <p>CYBER INTELLIGENCE HUB</p>
-            <input type="password" id="passcode-input" class="login-input" placeholder="ACCESS CODE" autofocus>
-            <button class="login-btn" onclick="verifyCode()">INITIALIZE</button>
-            <div id="error-msg" class="error-msg">ACCESS DENIED: INVALID CODE</div>
+            <h2 class="lock-title">XOSINT</h2>
+            <p class="lock-subtitle">CYBER INTELLIGENCE HUB v5.0</p>
+            
+            <div class="passcode-wrapper">
+                <input type="password" id="passcode-input" class="login-input heavy-font" placeholder="ENTER ACCESS CODE" autofocus>
+            </div>
+            <button class="framed-btn heavy-font" onclick="verifyCode()">AUTHENTICATE NODE</button>
+            <div id="error-msg" class="error-msg heavy-font">[!] ACCESS DENIED: INVALID PASSCODE</div>
         </div>
     </div>
 
-    <!-- אפליקציה ראשית -->
-    <div id="main-app">
+    <div id="main-app" class="heavy-font">
         <header>
-            <div class="brand">
-                <div class="brand-logo-small">
+            <div class="flex items-center gap-5">
+                <div class="w-12 h-12">
                     <svg viewBox="0 0 200 200" width="100%" height="100%">
-                        <path d="M100,100 C80,60 40,70 30,100 C20,130 50,150 100,100 Z" fill="#00ff66" stroke="#013214" stroke-width="6"/>
-                        <path d="M100,100 C140,60 130,20 100,30 C70,40 50,70 100,100 Z" fill="#00e65c" stroke="#013214" stroke-width="6"/>
-                        <path d="M100,100 C120,140 160,130 170,100 C180,70 150,50 100,100 Z" fill="#00ff66" stroke="#013214" stroke-width="6"/>
-                        <path d="M100,100 C60,140 70,180 100,170 C130,160 150,130 100,100 Z" fill="#00cc52" stroke="#013214" stroke-width="6"/>
+                        <path d="M100,100 C80,60 40,70 30,100 C20,130 50,150 100,100 Z" fill="#ff5500" stroke="#003311" stroke-width="6"/>
+                        <path d="M100,100 C140,60 130,20 100,30 C70,40 50,70 100,100 Z" fill="#00f3ff" stroke="#003311" stroke-width="6"/>
+                        <path d="M100,100 C120,140 160,130 170,100 C180,70 150,50 100,100 Z" fill="#00ff66" stroke="#003311" stroke-width="6"/>
+                        <path d="M100,100 C60,140 70,180 100,170 C130,160 150,130 100,100 Z" fill="#ff5500" stroke="#003311" stroke-width="6"/>
                     </svg>
                 </div>
                 <div>
                     <h1>XOSINT</h1>
-                    <span>RECONNAISSANCE & AUDIT V5.0</span>
+                    <span class="text-xs text-green-400 tracking-widest">ADVANCED RECONNAISSANCE SYSTEM</span>
                 </div>
             </div>
-            <div class="status-badge">SECURE ENCRYPTED NODE</div>
+            <div class="bg-cyan-900/40 border-2 border-cyan-400 text-cyan-300 px-5 py-2 rounded-xl text-xs shadow-lg">
+                STATUS: ENCRYPTED NODE ACTIVE
+            </div>
         </header>
 
-        <div class="nav-tools">
+        <div class="flex gap-4 flex-wrap mb-8">
             <button class="tool-tab active" onclick="switchTool('discord')">Discord OSINT</button>
             <button class="tool-tab" onclick="switchTool('custom')">Custom Lookup</button>
             <button class="tool-tab" onclick="switchTool('ip')">IP & Domain Intel</button>
@@ -389,51 +352,51 @@
 
         <div class="workspace">
             
-            <!-- כלי 1: Discord OSINT -->
+            <!-- Discord OSINT Module -->
             <div id="panel-discord" class="tool-panel active">
-                <h3 class="panel-title">Discord Reconnaissance Tool</h3>
-                <p class="panel-desc">Extract Snowflake creation timestamps, avatar metadata, live status payloads & projected phone prefixes.</p>
-                <div class="input-group">
-                    <input type="text" id="disc-input" class="osint-input" placeholder="Enter User ID / Username...">
-                    <button class="action-btn" onclick="runScan('discord')">Scan User</button>
+                <h3 class="text-2xl text-cyan-400 mb-2">Discord Reconnaissance Tool</h3>
+                <p class="text-xs text-blue-300 mb-8">Extract exact account creation dates from Discord Snowflake IDs & analyze profile metadata.</p>
+                <div class="flex gap-4 mb-8">
+                    <input type="text" id="discord-input" class="osint-input flex-1 heavy-font" placeholder="Enter Discord User ID (e.g. 155149108183695360)...">
+                    <button class="framed-btn !w-auto px-10" onclick="runScan('discord')">SCAN TARGET</button>
                 </div>
-                <div id="loading-discord" class="loading-spinner">[-] Interrogating Discord Gateway API...</div>
+                <div id="loading-discord" class="hidden text-cyan-400 mb-4 animate-pulse">[-] Decoding Discord Snowflake & Querying Public Gateways...</div>
                 <div id="results-discord" class="results-box"></div>
             </div>
 
-            <!-- כלי 2: Custom Lookup -->
+            <!-- Custom Lookup Module -->
             <div id="panel-custom" class="tool-panel">
-                <h3 class="panel-title">Custom Database Lookup</h3>
-                <p class="panel-desc">Query internal indexed OSINT repositories for targeted identity correlation.</p>
-                <div class="input-group">
-                    <input type="text" id="cust-input" class="osint-input" placeholder="Enter query string / email / phone...">
-                    <button class="action-btn" onclick="runScan('custom')">Execute Query</button>
+                <h3 class="text-2xl text-cyan-400 mb-2">Custom Database & DNS Lookup</h3>
+                <p class="text-xs text-blue-300 mb-8">Query live DNS-over-HTTPS records (A, MX, TXT, NS) for active domain names.</p>
+                <div class="flex gap-4 mb-8">
+                    <input type="text" id="custom-input" class="osint-input flex-1 heavy-font" placeholder="Enter Domain (e.g. google.com)...">
+                    <button class="framed-btn !w-auto px-10" onclick="runScan('custom')">EXECUTE QUERY</button>
                 </div>
-                <div id="loading-custom" class="loading-spinner">[-] Querying decentralized index nodes...</div>
+                <div id="loading-custom" class="hidden text-cyan-400 mb-4 animate-pulse">[-] Querying Cloudflare DNS-over-HTTPS Nodes...</div>
                 <div id="results-custom" class="results-box"></div>
             </div>
 
-            <!-- כלי 3: IP & Domain Intel -->
+            <!-- IP & Domain Intel Module -->
             <div id="panel-ip" class="tool-panel">
-                <h3 class="panel-title">IP & Domain Intelligence</h3>
-                <p class="panel-desc">Analyze network routing, autonomous system numbers (ASN), geolocation, and open ports.</p>
-                <div class="input-group">
-                    <input type="text" id="ip-input" class="osint-input" placeholder="Enter IPv4/IPv6 or Domain...">
-                    <button class="action-btn" onclick="runScan('ip')">Analyze Target</button>
+                <h3 class="text-2xl text-cyan-400 mb-2">IP & Domain Intelligence</h3>
+                <p class="text-xs text-blue-300 mb-8">Perform live network routing, ASN, ISP, and geographic analysis for any public IP.</p>
+                <div class="flex gap-4 mb-8">
+                    <input type="text" id="ip-input" class="osint-input flex-1 heavy-font" placeholder="Enter IP Address (e.g. 8.8.8.8 or leave empty for self)...">
+                    <button class="framed-btn !w-auto px-10" onclick="runScan('ip')">ANALYZE IP</button>
                 </div>
-                <div id="loading-ip" class="loading-spinner">[-] Performing reverse DNS & geolocation lookup...</div>
+                <div id="loading-ip" class="hidden text-cyan-400 mb-4 animate-pulse">[-] Fetching live geolocation & network telemetry...</div>
                 <div id="results-ip" class="results-box"></div>
             </div>
 
-            <!-- כלי 4: Breach Radar -->
+            <!-- Breach Radar Module -->
             <div id="panel-breach" class="tool-panel">
-                <h3 class="panel-title">Credential Breach Radar</h3>
-                <p class="panel-desc">Scan multi-terabyte data breach compilations for leaked credentials and hashes.</p>
-                <div class="input-group">
-                    <input type="text" id="breach-input" class="osint-input" placeholder="Enter email or domain for breach audit...">
-                    <button class="action-btn" onclick="runScan('breach')">Audit Breaches</button>
+                <h3 class="text-2xl text-cyan-400 mb-2">Credential Breach Radar</h3>
+                <p class="text-xs text-blue-300 mb-8">Scan target domains for mail exchanger infrastructure & security headers.</p>
+                <div class="flex gap-4 mb-8">
+                    <input type="text" id="breach-input" class="osint-input flex-1 heavy-font" placeholder="Enter Domain / Organization...">
+                    <button class="framed-btn !w-auto px-10" onclick="runScan('breach')">AUDIT DOMAIN</button>
                 </div>
-                <div id="loading-breach" class="loading-spinner">[-] Scanning dark web compilation archives...</div>
+                <div id="loading-breach" class="hidden text-cyan-400 mb-4 animate-pulse">[-] Auditing domain security infrastructure...</div>
                 <div id="results-breach" class="results-box"></div>
             </div>
 
@@ -449,70 +412,124 @@
 
             if (val === 'x1') {
                 screen.style.opacity = '0';
+                screen.style.transform = 'scale(1.1)';
                 setTimeout(() => {
                     screen.style.display = 'none';
                     app.style.display = 'block';
-                }, 600);
+                }, 700);
             } else {
                 err.style.display = 'block';
             }
         }
 
+        document.getElementById('passcode-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') verifyCode();
+        });
+
         function switchTool(toolName) {
             document.querySelectorAll('.tool-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
 
-            event.target.classList.add('active');
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
             document.getElementById('panel-' + toolName).classList.add('active');
         }
 
-        function runScan(type) {
-            const inputVal = document.getElementById(type + '-input').value.trim();
+        async function runScan(type) {
+            const inputEl = document.getElementById(type + '-input');
             const loadingEl = document.getElementById('loading-' + type);
             const resultsEl = document.getElementById('results-' + type);
 
-            if (!inputVal) {
-                alert('Please enter a target query first.');
-                return;
-            }
+            if (!inputEl || !loadingEl || !resultsEl) return;
+            const inputVal = inputEl.value.trim();
 
             loadingEl.style.display = 'block';
             resultsEl.style.display = 'none';
 
-            setTimeout(() => {
+            let output = `[+] TARGET: ${inputVal || 'AUTO_SELF'}\n`;
+            output += `[+] SCAN TIMESTAMP: ${new Date().toISOString()}\n`;
+            output += `--------------------------------------------------\n`;
+
+            try {
+                if (type === 'discord') {
+                    if (!/^\d{17,20}$/.test(inputVal)) {
+                        output += `[ERROR] Invalid Discord ID format! Please provide a valid 17-20 digit Snowflake ID.`;
+                    } else {
+                        const epoch = 1420070400000n;
+                        const idBig = BigInt(inputVal);
+                        const timestamp = Number((idBig >> 22n) + epoch);
+                        const creationDate = new Date(timestamp);
+
+                        output += `[SUCCESS] Real Snowflake ID Decoded!\n`;
+                        output += `[ACCOUNT CREATED]: ${creationDate.toUTCString()} (${creationDate.toISOString()})\n`;
+                        output += `[UNIX TIMESTAMP]: ${timestamp} ms\n`;
+                        output += `[WORKER ID]: ${(idBig & 0x3E0000n) >> 17n}\n`;
+                        output += `[PROCESS ID]: ${(idBig & 0x1F000n) >> 12n}\n`;
+                        output += `[INCREMENTAL]: ${idBig & 0xFFFn}\n`;
+                        output += `[PROFILE CDN]: https://cdn.discordapp.com/avatars/${inputVal}/`;
+                    }
+                } else if (type === 'ip') {
+                    const targetIp = inputVal ? inputVal : '';
+                    const res = await fetch(`https://ipapi.co/${targetIp}/json/`);
+                    if (!res.ok) throw new Error('Failed to query IP API');
+                    const data = await res.json();
+
+                    output += `[SUCCESS] Live Telemetry Retrieved!\n`;
+                    output += `[IP ADDRESS] : ${data.ip}\n`;
+                    output += `[CITY / REGION] : ${data.city}, ${data.region} (${data.region_code})\n`;
+                    output += `[COUNTRY] : ${data.country_name} (${data.country_code_iso3})\n`;
+                    output += `[POSTAL CODE] : ${data.postal || 'N/A'}\n`;
+                    output += `[LAT / LONG] : ${data.latitude}, ${data.longitude}\n`;
+                    output += `[TIMEZONE] : ${data.timezone}\n`;
+                    output += `[ASN / NETWORK] : ${data.asn} (${data.org || data.asn})\n`;
+                    output += `[ISP] : ${data.network || data.org}`;
+                } else if (type === 'custom') {
+                    const domain = inputVal.replace(/^(https?:\/\/)?/, '').split('/')[0];
+                    if (!domain) throw new Error('Invalid domain specified');
+
+                    const res = await fetch(`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(domain)}&type=A`, {
+                        headers: { 'Accept': 'application/dns-json' }
+                    });
+                    const data = await res.json();
+
+                    output += `[SUCCESS] DNS Records Resolved via Cloudflare!\n`;
+                    output += `[DOMAIN]: ${domain}\n`;
+                    if (data.Answer && data.Answer.length > 0) {
+                        data.Answer.forEach(ans => {
+                            output += `[RECORD A]: ${ans.name} -> ${ans.data} (TTL: ${ans.TTL}s)\n`;
+                        });
+                    } else {
+                        output += `[NOTICE] No direct A records found or status: ${data.Status}\n`;
+                    }
+                } else if (type === 'breach') {
+                    const domain = inputVal.replace(/^(https?:\/\/)?/, '').split('/')[0];
+                    if (!domain) throw new Error('Invalid domain specified');
+
+                    const res = await fetch(`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(domain)}&type=MX`, {
+                        headers: { 'Accept': 'application/dns-json' }
+                    });
+                    const data = await res.json();
+
+                    output += `[SUCCESS] Mail Server Infrastructure Scanned!\n`;
+                    output += `[DOMAIN]: ${domain}\n`;
+                    if (data.Answer && data.Answer.length > 0) {
+                        data.Answer.forEach(ans => {
+                            output += `[MX SERVER]: ${ans.data}\n`;
+                        });
+                    } else {
+                        output += `[STATUS] No active MX records detected for domain.\n`;
+                    }
+                }
+            } catch (err) {
+                output += `[ERROR] Failed to query target: ${err.message}`;
+            } finally {
                 loadingEl.style.display = 'none';
                 resultsEl.style.display = 'block';
-
-                let output = `[+] TARGET: ${inputVal}\n`;
-                output += `[+] TIMESTAMP: ${new Date().toISOString()}\n`;
-                output += `--------------------------------------------------\n`;
-
-                if (type === 'discord') {
-                    output += `[SUCCESS] Snowflake ID parsed: 983142750912\n`;
-                    output += `[INFO] Account Created: 2022-04-14 18:22:04 UTC\n`;
-                    output += `[INFO] Badge Flags: HypeSquad Bravery, Active Developer\n`;
-                    output += `[STATUS] Projected Phone Prefix: +972 (Verified Carrier Match)`;
-                } else if (type === 'custom') {
-                    output += `[SUCCESS] Index match found across private nodes.\n`;
-                    output += `[MATCH] Username alias: reelxooo / BOXIALTIL\n`;
-                    output += `[ASSOCIATED EMAIL] x_****_x@gmail.com\n`;
-                    output += `[SECURITY STATUS] 2FA Enabled via Hardware Token.`;
-                } else if (type === 'ip') {
-                    output += `[SUCCESS] Target IP resolved: 185.199.108.153\n`;
-                    output += `[GEO] Country: United States (US) - California\n`;
-                    output += `[ASN] Autonomous System: AS54113 Fastly Inc.\n`;
-                    output += `[PORTS] Open Ports: 80 (HTTP), 443 (HTTPS)`;
-                } else if (type === 'breach') {
-                    output += `[ALERT] Breach records found for target query!\n`;
-                    output += `[DB_01] BreachName: Sector-7 Forum Leak (2024)\n`;
-                    output += `[HASH_TYPE] Password Encryption: Argon2id (Secure Salted)`;
-                }
-
                 resultsEl.innerText = output;
-            }, 1000);
+            }
         }
 
-        // אנימציית רקע גלים כחולים (Wavy 3D Grid)
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
 
@@ -523,69 +540,50 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        let time = 0;
-
-        function drawWavyGrid() {
-            ctx.fillStyle = '#010409';
+        let step = 0;
+        function animateGrid() {
+            ctx.fillStyle = 'rgba(1, 4, 9, 0.2)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            const cols = 35;
-            const rows = 25;
-            const spacingX = canvas.width / (cols - 1);
-            const spacingY = canvas.height / (rows - 1);
+            ctx.strokeStyle = 'rgba(0, 243, 255, 0.25)';
+            ctx.lineWidth = 1.5;
 
-            time += 0.02;
+            const rows = 18;
+            const cols = 28;
+            const spacingX = canvas.width / cols;
+            const spacingY = canvas.height / rows;
 
-            ctx.strokeStyle = 'rgba(0, 243, 255, 0.22)';
-            ctx.lineWidth = 1.2;
+            step += 0.02;
 
-            const points = [];
-
-            // יצירת נקודות הרשת עם גלים תלת-ממדיים
-            for (let r = 0; r < rows; r++) {
-                points[r] = [];
-                for (let c = 0; c < cols; c++) {
+            for (let r = 0; r <= rows; r++) {
+                ctx.beginPath();
+                for (let c = 0; c <= cols; c++) {
                     const x = c * spacingX;
-                    const y = r * spacingY;
-                    
-                    // חישוב גל סינוס וקוסינוס שיוצר את העיוות והתנועה
-                    const wave1 = Math.sin(c * 0.3 + time) * 25;
-                    const wave2 = Math.cos(r * 0.3 + time * 0.8) * 25;
-                    const wave3 = Math.sin((c + r) * 0.2 + time * 1.2) * 15;
+                    const wave = Math.sin(c * 0.4 + step) * Math.cos(r * 0.3 + step) * 22;
+                    const y = (r * spacingY) + wave;
 
-                    points[r][c] = {
-                        x: x + wave3,
-                        y: y + wave1 + wave2
-                    };
-                }
-            }
-
-            // ציור קווי הרוחב של הרשת
-            for (let r = 0; r < rows; r++) {
-                ctx.beginPath();
-                for (let c = 0; c < cols; c++) {
-                    const p = points[r][c];
-                    if (c === 0) ctx.moveTo(p.x, p.y);
-                    else ctx.lineTo(p.x, p.y);
+                    if (c === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
                 }
                 ctx.stroke();
             }
 
-            // ציור קווי האורך של הרשת
-            for (let c = 0; c < cols; c++) {
+            for (let c = 0; c <= cols; c++) {
                 ctx.beginPath();
-                for (let r = 0; r < rows; r++) {
-                    const p = points[r][c];
-                    if (r === 0) ctx.moveTo(p.x, p.y);
-                    else ctx.lineTo(p.x, p.y);
+                for (let r = 0; r <= rows; r++) {
+                    const x = c * spacingX;
+                    const wave = Math.sin(c * 0.4 + step) * Math.cos(r * 0.3 + step) * 22;
+                    const y = (r * spacingY) + wave;
+
+                    if (r === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
                 }
                 ctx.stroke();
             }
 
-            requestAnimationFrame(drawWavyGrid);
+            requestAnimationFrame(animateGrid);
         }
-
-        drawWavyGrid();
+        animateGrid();
     </script>
 </body>
 </html>
