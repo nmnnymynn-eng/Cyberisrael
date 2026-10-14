@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XOSINT - Cyber Intelligence Hub</title>
+    <!-- טעינת פונט Ultra בדיוק כמו בתמונה ששלחת -->
+    <link href="https://fonts.googleapis.com/css2?family=Ultra&display=swap" rel="stylesheet">
     <style>
         :root {
             --neon-blue: #00f3ff;
             --neon-green: #00ff66;
-            --dark-bg: #02050b;
-            --panel-bg: rgba(2, 12, 25, 0.9);
-            --border-color: rgba(0, 243, 255, 0.35);
-            --border-green: rgba(0, 255, 102, 0.45);
+            --dark-bg: #010308;
+            --panel-bg: rgba(2, 10, 22, 0.92);
+            --border-color: rgba(0, 243, 255, 0.4);
+            --border-green: rgba(0, 255, 102, 0.5);
         }
 
         body {
@@ -19,9 +21,10 @@
             padding: 0;
             background-color: var(--dark-bg);
             color: #ffffff;
-            font-family: 'Courier New', Courier, monospace;
+            font-family: 'Ultra', serif;
             overflow-x: hidden;
             user-select: none;
+            letter-spacing: 1px;
         }
 
         #bg-canvas {
@@ -40,80 +43,91 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(2, 5, 11, 0.98);
+            background: rgba(1, 3, 8, 0.98);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            backdrop-filter: blur(20px);
-            transition: opacity 0.5s ease;
+            backdrop-filter: blur(25px);
+            transition: opacity 0.6s ease;
         }
 
         .login-box {
             background: var(--panel-bg);
             border: 2px solid var(--neon-green);
-            padding: 45px 35px;
-            border-radius: 14px;
+            padding: 50px 40px;
+            border-radius: 16px;
             text-align: center;
-            box-shadow: 0 0 40px rgba(0, 255, 102, 0.25);
-            width: 340px;
+            box-shadow: 0 0 50px rgba(0, 255, 102, 0.3);
+            width: 380px;
         }
 
         .logo-container {
-            width: 90px;
-            height: 90px;
+            width: 100px;
+            height: 100px;
             margin: 0 auto 20px auto;
-            filter: drop-shadow(0 0 12px rgba(0, 255, 102, 0.6));
+            filter: drop-shadow(0 0 15px rgba(0, 255, 102, 0.7));
+            animation: pulseLogo 3s infinite alternate;
+        }
+
+        @keyframes pulseLogo {
+            0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(0, 255, 102, 0.5)); }
+            100% { transform: scale(1.05); filter: drop-shadow(0 0 20px rgba(0, 243, 255, 0.8)); }
         }
 
         .login-box h2 {
             color: var(--neon-green);
             margin: 0 0 5px 0;
-            letter-spacing: 4px;
-            font-size: 24px;
+            letter-spacing: 3px;
+            font-size: 26px;
+            text-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
         }
 
         .login-box p {
-            color: #8ab4f8;
-            font-size: 11px;
-            margin-bottom: 25px;
+            color: var(--neon-blue);
+            font-size: 10px;
+            margin-bottom: 30px;
             letter-spacing: 2px;
         }
 
         .login-input {
             width: 100%;
             background: #000;
-            border: 1px solid var(--neon-blue);
+            border: 2px solid var(--neon-blue);
             color: var(--neon-green);
-            padding: 14px;
-            border-radius: 6px;
-            font-size: 16px;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 18px;
             text-align: center;
-            font-family: monospace;
+            font-family: 'Ultra', serif;
             margin-bottom: 20px;
             outline: none;
             box-sizing: border-box;
             letter-spacing: 3px;
+            box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.2);
         }
 
         .login-btn {
             width: 100%;
-            background: linear-gradient(135deg, #0044aa, #00ff66);
+            background: linear-gradient(135deg, #003366, #00ff66);
             color: #000;
             border: none;
-            padding: 14px;
-            border-radius: 6px;
+            padding: 16px;
+            border-radius: 8px;
             font-weight: bold;
+            font-family: 'Ultra', serif;
             font-size: 14px;
             cursor: pointer;
             letter-spacing: 2px;
             text-transform: uppercase;
-            transition: 0.2s;
+            transition: 0.25s;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.4);
         }
 
         .login-btn:hover {
-            box-shadow: 0 0 25px var(--neon-green);
+            background: var(--neon-blue);
+            box-shadow: 0 0 30px var(--neon-blue);
             transform: translateY(-2px);
         }
 
@@ -123,13 +137,14 @@
             margin-top: 15px;
             display: none;
             letter-spacing: 1px;
+            text-shadow: 0 0 8px rgba(255, 51, 51, 0.5);
         }
 
-        /* האפליקציה הראשית */
+        /* אפליקציה ראשית */
         #main-app {
             display: none;
-            padding: 25px;
-            max-width: 1400px;
+            padding: 30px;
+            max-width: 1450px;
             margin: 0 auto;
         }
 
@@ -137,29 +152,29 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 15px;
-            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .brand {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 18px;
         }
 
         .brand-logo-small {
-            width: 45px;
-            height: 45px;
-            filter: drop-shadow(0 0 8px rgba(0, 255, 102, 0.5));
+            width: 50px;
+            height: 50px;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 102, 0.6));
         }
 
         .brand h1 {
             margin: 0;
-            font-size: 26px;
+            font-size: 30px;
             letter-spacing: 4px;
             color: var(--neon-blue);
-            text-shadow: 0 0 12px rgba(0, 243, 255, 0.4);
+            text-shadow: 0 0 15px rgba(0, 243, 255, 0.6);
         }
 
         .brand span {
@@ -169,50 +184,51 @@
         }
 
         .status-badge {
-            background: rgba(0, 255, 102, 0.1);
+            background: rgba(0, 255, 102, 0.12);
             border: 1px solid var(--neon-green);
             color: var(--neon-green);
-            padding: 6px 16px;
+            padding: 8px 18px;
             border-radius: 20px;
             font-size: 11px;
             letter-spacing: 2px;
-            box-shadow: 0 0 12px rgba(0, 255, 102, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
         }
 
         .nav-tools {
             display: flex;
-            gap: 12px;
+            gap: 15px;
             flex-wrap: wrap;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         .tool-tab {
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
             color: #8ab4f8;
-            padding: 12px 22px;
-            border-radius: 6px;
+            padding: 14px 26px;
+            border-radius: 8px;
             cursor: pointer;
-            font-family: monospace;
+            font-family: 'Ultra', serif;
             font-size: 12px;
             letter-spacing: 1.5px;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
         }
 
         .tool-tab:hover, .tool-tab.active {
-            background: rgba(0, 243, 255, 0.15);
+            background: rgba(0, 243, 255, 0.18);
             border-color: var(--neon-blue);
             color: var(--neon-blue);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.4);
+            transform: translateY(-2px);
         }
 
         .workspace {
             background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 35px;
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.1);
-            min-height: 420px;
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            padding: 40px;
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.15);
+            min-height: 450px;
             position: relative;
         }
 
@@ -226,86 +242,90 @@
 
         .panel-title {
             color: var(--neon-blue);
-            font-size: 20px;
-            letter-spacing: 2.5px;
+            font-size: 22px;
+            letter-spacing: 2px;
             margin-top: 0;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
         }
 
         .panel-desc {
             color: #8ab4f8;
-            font-size: 13px;
-            margin-bottom: 25px;
-            letter-spacing: 0.5px;
+            font-size: 12px;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
         }
 
         .input-group {
             display: flex;
-            gap: 12px;
-            margin-bottom: 25px;
+            gap: 15px;
+            margin-bottom: 30px;
         }
 
         .osint-input {
             flex: 1;
-            background: #010810;
-            border: 1px solid var(--border-color);
+            background: #000408;
+            border: 2px solid var(--border-color);
             color: var(--neon-green);
-            padding: 14px 20px;
-            border-radius: 6px;
-            font-size: 15px;
-            font-family: monospace;
+            padding: 16px 22px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Ultra', serif;
             outline: none;
-            transition: 0.2s;
+            transition: 0.25s;
+            box-shadow: inset 0 0 10px rgba(0, 255, 102, 0.1);
         }
 
         .osint-input:focus {
             border-color: var(--neon-green);
-            box-shadow: 0 0 18px rgba(0, 255, 102, 0.25);
+            box-shadow: 0 0 25px rgba(0, 255, 102, 0.35), inset 0 0 10px rgba(0, 255, 102, 0.2);
         }
 
         .action-btn {
-            background: linear-gradient(135deg, #003366, #00f3ff);
+            background: linear-gradient(135deg, #002244, #00f3ff);
             color: #000;
             border: none;
-            padding: 0 30px;
-            border-radius: 6px;
+            padding: 0 35px;
+            border-radius: 8px;
             font-weight: bold;
-            font-family: monospace;
+            font-family: 'Ultra', serif;
             font-size: 13px;
             cursor: pointer;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            transition: 0.2s;
+            transition: 0.25s;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
         }
 
         .action-btn:hover {
             background: var(--neon-blue);
-            box-shadow: 0 0 25px var(--neon-blue);
+            box-shadow: 0 0 30px var(--neon-blue);
             transform: translateY(-2px);
         }
 
         .results-box {
-            background: #01050a;
-            border: 1px solid var(--border-green);
-            border-radius: 6px;
-            padding: 22px;
+            background: #000205;
+            border: 2px solid var(--border-green);
+            border-radius: 8px;
+            padding: 25px;
             font-size: 13px;
-            line-height: 1.7;
+            line-height: 1.8;
             color: var(--neon-green);
-            max-height: 320px;
+            max-height: 350px;
             overflow-y: auto;
             display: none;
-            box-shadow: inset 0 0 15px rgba(0, 255, 102, 0.08);
+            box-shadow: inset 0 0 20px rgba(0, 255, 102, 0.12);
+            text-shadow: 0 0 5px rgba(0, 255, 102, 0.3);
         }
 
         .loading-spinner {
             display: none;
             color: var(--neon-blue);
-            font-style: italic;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             letter-spacing: 2px;
             font-size: 12px;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
         }
     </style>
 </head>
@@ -316,7 +336,6 @@
     <!-- מסך כניסה -->
     <div id="login-screen">
         <div class="login-box">
-            <!-- לוגו תלתן מדויק ב-SVG -->
             <div class="logo-container">
                 <svg viewBox="0 0 200 200" width="100%" height="100%">
                     <path d="M100,100 C80,60 40,70 30,100 C20,130 50,150 100,100 Z" fill="#00ff66" stroke="#013214" stroke-width="6"/>
@@ -426,7 +445,7 @@
                 setTimeout(() => {
                     screen.style.display = 'none';
                     app.style.display = 'block';
-                }, 500);
+                }, 600);
             } else {
                 err.style.display = 'block';
             }
@@ -497,20 +516,20 @@
         resizeCanvas();
 
         const particles = [];
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 55; i++) {
             particles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                vx: (Math.random() - 0.5) * 0.7,
-                vy: (Math.random() - 0.5) * 0.7
+                vx: (Math.random() - 0.5) * 0.8,
+                vy: (Math.random() - 0.5) * 0.8
             });
         }
 
         function drawCyberBg() {
-            ctx.fillStyle = '#02050b';
+            ctx.fillStyle = '#010308';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            ctx.strokeStyle = 'rgba(0, 243, 255, 0.06)';
+            ctx.strokeStyle = 'rgba(0, 243, 255, 0.08)';
             ctx.lineWidth = 1;
 
             for (let i = 0; i < particles.length; i++) {
@@ -518,7 +537,7 @@
                     const dx = particles[i].x - particles[j].x;
                     const dy = particles[i].y - particles[j].y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 140) {
+                    if (dist < 150) {
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
