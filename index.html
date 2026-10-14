@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מגן ישראל בסייבר - חמ"ל הגנה לאומי</title>
+    <title>מגן ישראל בסייבר - פורטל הגנה לאומי</title>
     <style>
         :root {
-            --bg-color: #050b14;
-            --card-bg: rgba(10, 25, 47, 0.85);
-            --accent-blue: #0ea5e9;
-            --accent-blue-glow: rgba(14, 165, 233, 0.3);
+            --bg-color: #030712;
+            --card-bg: #0f172a;
+            --accent-blue: #38bdf8;
+            --accent-red: #ef4444;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --border-color: rgba(14, 165, 233, 0.2);
+            --border-color: #1e293b;
         }
 
         * {
@@ -28,319 +28,213 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
-            position: relative;
         }
 
-        /* רקע סייבר ויזואלי עדין */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: radial-gradient(circle at 50% 20%, rgba(14, 165, 233, 0.08) 0%, transparent 60%);
-            z-index: -1;
-        }
-
+        /* Header */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 40px;
+            background: #090d16;
             border-bottom: 1px solid var(--border-color);
-            background: rgba(5, 11, 20, 0.9);
-            backdrop-filter: blur(10px);
         }
 
-        .logo-area {
+        .logo-container {
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
         .logo-img {
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             border: 2px solid var(--accent-blue);
-            box-shadow: 0 0 15px var(--accent-blue-glow);
             object-fit: cover;
         }
 
-        .logo-text {
-            font-size: 1.3rem;
+        .logo-text h1 {
+            font-size: 1.25rem;
             font-weight: bold;
             color: #ffffff;
-            letter-spacing: 0.5px;
         }
 
-        .status-badge {
+        .logo-text p {
             font-size: 0.85rem;
-            padding: 6px 14px;
-            background: rgba(14, 165, 233, 0.1);
-            border: 1px solid var(--accent-blue);
-            border-radius: 20px;
-            color: #38bdf8;
-            box-shadow: 0 0 10px var(--accent-blue-glow);
+            color: var(--text-muted);
         }
 
-        main {
-            flex: 1;
+        nav {
             display: flex;
-            flex-direction: column;
-            max-width: 1000px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 30px 20px;
+            gap: 25px;
         }
 
-        .hero-section {
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--accent-blue);
+        }
+
+        /* Main Hero */
+        .hero {
             text-align: center;
-            margin-bottom: 30px;
+            padding: 60px 20px;
+            background: radial-gradient(circle at center, rgba(56, 189, 248, 0.05) 0%, transparent 70%);
         }
 
-        h1 {
-            font-size: 2.5rem;
+        .hero h2 {
+            font-size: 2.8rem;
             font-weight: 800;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             background: linear-gradient(90deg, #ffffff, #38bdf8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .hero-section p {
+        .hero p {
+            font-size: 1.15rem;
             color: var(--text-muted);
-            font-size: 1.05rem;
+            max-width: 700px;
+            margin: 0 auto 30px auto;
+            line-height: 1.6;
         }
 
-        /* חלון הצ'אט של הבוט הגנתי */
-        .chat-container {
+        .emergency-btn {
+            background-color: var(--accent-red);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+            transition: opacity 0.2s;
+        }
+
+        .emergency-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Content Grid */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
             flex: 1;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            display: flex;
-            flex-direction: column;
-            height: 500px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            overflow: hidden;
         }
 
-        .chat-header {
-            padding: 15px 20px;
-            background: rgba(14, 165, 233, 0.05);
-            border-bottom: 1px solid var(--border-color);
-            font-weight: 600;
-            font-size: 0.95rem;
-            color: #38bdf8;
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--accent-blue);
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .msg {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 12px;
+        .card p, .card ul {
+            color: var(--text-muted);
             font-size: 0.95rem;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
-        .msg.bot {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            align-self: flex-start;
-            border-top-right-radius: 2px;
+        .card ul {
+            list-style-position: inside;
+            margin-top: 10px;
         }
 
-        .msg.user {
-            background: var(--accent-blue);
-            color: #050b14;
-            align-self: flex-end;
-            font-weight: 500;
-            border-top-left-radius: 2px;
+        .card ul li {
+            margin-bottom: 8px;
         }
 
-        .chat-input-area {
-            padding: 15px 20px;
-            background: rgba(5, 11, 20, 0.5);
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: #090d16;
             border-top: 1px solid var(--border-color);
-            display: flex;
-            gap: 10px;
-        }
-
-        input[type="text"] {
-            flex: 1;
-            padding: 12px 18px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-main);
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        input[type="text"]:focus {
-            border-color: var(--accent-blue);
-        }
-
-        button.send-btn {
-            background: var(--accent-blue);
-            color: #050b14;
-            border: none;
-            padding: 0 24px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 0 10px var(--accent-blue-glow);
-            transition: opacity 0.2s;
-        }
-
-        button.send-btn:hover {
-            opacity: 0.9;
-        }
-
-        button.send-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
+            color: var(--text-muted);
+            font-size: 0.85rem;
         }
     </style>
 </head>
 <body>
 
+    <!-- Header -->
     <header>
-        <div class="logo-area">
-            <!-- שימוש בלוגו שסיפקת -->
-            <img src="image_3fa975.jpg" alt="לוגו הגנה בסייבר" class="logo-img" id="logo-element">
-            <div class="logo-text">המערך הלאומי להגנת הסייבר - ישראל</div>
+        <div class="logo-container">
+            <!-- הלוגו שסיפקת -->
+            <img src="image_3fa975.jpg" alt="לוגו הגנה בסייבר" class="logo-img">
+            <div class="logo-text">
+                <h1>הגנת הסייבר הלאומית</h1>
+                <p>מגנים על מרחב הרשת של ישראל</p>
+            </div>
         </div>
-        <div class="status-badge" id="ai-status">מאתחל מערכת בינה מלאכותית מקומית...</div>
+        <nav>
+            <a href="#alerts">התרעות אבטחה</a>
+            <a href="#guidelines">הנחיות לציבור</a>
+            <a href="#report">דיווח על אירוע</a>
+            <a href="#about">אודות</a>
+        </nav>
     </header>
 
-    <main>
-        <div class="hero-section">
-            <h1>מגנים על מרחב הסייבר של ישראל</h1>
-            <p>שאל את יועץ האבטחה החכם שלנו כל שאלה בנושא הגנה מקוונת, אבטחת מידע וזיהוי איומים.</p>
+    <!-- Hero Section -->
+    <section class="hero">
+        <h2>חזית ההגנה הדיגיטלית של ישראל</h2>
+        <p>פורטל החירום וההנחיות הלאומי לאבטחת מידע, התמודדות עם מתקפות רשת ושמירה על ביטחונם הדיגיטלי של אזרחי ישראל מסביב שעון.</p>
+        <button class="emergency-btn" onclick="alert('לדיווח דחוף על אירוע סייבר או פריצה, פנה למוקד הלאומי 119')">🚨 דיווח על אירוע חירום חירום (119)</button>
+    </section>
+
+    <!-- Main Grid -->
+    <div class="container" id="guidelines">
+        <div class="card">
+            <h3>🛡️ הנחיות אבטחה ליחידים</h3>
+            <p>צעדים בסיסיים שיש לנקוט כדי להגן על החשבונות והמידע האישי שלכם ברשת:</p>
+            <ul>
+                <li>הפעלת אימות דו-שלבי (2FA) בכל החשבונות החשובים (רשתות חברתיות, מייל, בנק).</li>
+                <li>הימנעות מפתיחת קישורים חשודים או הודעות ממתחזים (פישינג).</li>
+                <li>שימוש בסיסמאות חזקות ושונות לכל אתר ושירות.</li>
+                <li>עדכון תדיר של מערכות ההפעלה והאפליקציות במכשירים.</li>
+            </ul>
         </div>
 
-        <div class="chat-container">
-            <div class="chat-header">
-                <span>🛡️</span> עמדת ייעוץ אבטחה חכמה (ללא צורך ב-API Key חיצוני)
-            </div>
-            
-            <div class="chat-messages" id="chat-messages">
-                <div class="msg bot">שלום. אני מערכת ההגנה בסייבר. כיצד אוכל לסייע לך באבטחת מידע, זיהוי התקפות או שמירה על מרחב הרשת הישראלי היום?</div>
-            </div>
-
-            <div class="chat-input-area">
-                <input type="text" id="user-input" placeholder="הקלד פנייה או שאלה בנושא אבטחת סייבר..." disabled>
-                <button class="send-btn" id="send-btn" disabled>שליחה</button>
-            </div>
+        <div class="card" id="alerts">
+            <h3>⚠️ עדכוני אבטחה והתרעות</h3>
+            <p><strong>מצב כוננות עליון במרחב הציבורי:</strong> זוהו ניסיונות חוזרים ונשנים לפגיעה בתשתיות קריטיות ובפרופילים פרטיים באמצעות הנדסה חברתית והפצת קישורים זדוניים.</p>
+            <br>
+            <p>מומלץ לגלות ערנות מוגברת, לא לאשר בקשות חברות או הודעות מגורמים לא מוכרים, ולא למסור פרטים אישיים או קודי אימות בשום אופן.</p>
         </div>
-    </main>
 
-    <!-- סקריפט להפעלת מודל ה-AI המקומי בדפדפן דרך WebLLM -->
-    <script type="module">
-        import { CreateWebWorkerMLCEngine } from "https://esm.run/@mlc-ai/web-llm";
+        <div class="card" id="report">
+            <h3>📢 מרכז דיווח וסיוע</h3>
+            <p>זיהיתם פעילות חשודה, ניסיון פריצה לחשבון, או התקפת רשת? אנחנו כאן כדי לטפל בכך.</p>
+            <br>
+            <p>ניתן ליצור קשר ישיר עם מרכז השליטה הלאומי בחירום דרך קו הסיוע הארצי בטלפון <strong>119</strong> או לדווח ישירות דרך גורמי הביטחון המוסמכים.</p>
+        </div>
+    </div>
 
-        const modelName = "Llama-3-8B-Instruct-q4f32_1-MLC";
-        let engine;
+    <!-- Footer -->
+    <footer>
+        <p>כל הזכויות שמורות לפורטל ההגנה הלאומי בסייבר © 2026</p>
+    </footer>
 
-        const statusBadge = document.getElementById("ai-status");
-        const chatMessages = document.getElementById("chat-messages");
-        const userInput = document.getElementById("user-input");
-        const sendBtn = document.getElementById("send-btn");
-
-        async function initSystem() {
-            try {
-                // הגדרת הנחיית מערכת (System Prompt) ששומרת על אופי הגנתי ואבטחתי
-                const systemPrompt = "אתה מערכת בינה מלאכותית מתקדמת של המערך הלאומי להגנת הסייבר בישראל. תפקידך לסייע באבטחת מידע, ייעוץ הגנתי ברשת, זיהוי הונאות והדרכת משתמשים לשמירה על ביטחונם הדיגיטלי בעברית מקצועית ובטוחה.";
-
-                engine = await CreateWebWorkerMLCEngine(
-                    new Worker(URL.createObjectURL(new Blob([`
-                        import { WebWorkerMLCEngineHandler } from "https://esm.run/@mlc-ai/web-llm";
-                        const handler = new WebWorkerMLCEngineHandler();
-                        onmessage = (msg) => handler.onmessage(msg);
-                    `], { type: "javascript/worker" }))),
-                    modelName,
-                    {
-                        initProgressCallback: (report) => {
-                            statusBadge.innerText = report.text;
-                        }
-                    }
-                );
-                
-                // שמירת ההנחיה כזיכרון שיחה ראשוני
-                window.aiMessages = [{ role: "system", content: systemPrompt }];
-
-                statusBadge.innerText = "מערכת הגנה פעילה ומאובטחת מקומית";
-                statusBadge.style.borderColor = "#10b981";
-                statusBadge.style.color = "#34d399";
-                
-                userInput.disabled = false;
-                sendBtn.disabled = false;
-            } catch (err) {
-                statusBadge.innerText = "שגיאה באתحाल המערכת";
-                console.error(err);
-            }
-        }
-
-        initSystem();
-
-        async function handleSend() {
-            const text = userInput.value.trim();
-            if (!text || !engine) return;
-
-            appendMessage(text, 'user');
-            userInput.value = '';
-
-            window.aiMessages.push({ role: "user", content: text });
-            const botDiv = appendMessage("...", 'bot');
-
-            try {
-                const chunks = await engine.chat.completions.create({
-                    messages: window.aiMessages,
-                    stream: true,
-                });
-
-                let reply = "";
-                for await (const chunk of chunks) {
-                    reply += chunk.choices[0]?.delta?.content || "";
-                    botDiv.innerText = reply;
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                }
-
-                window.aiMessages.push({ role: "assistant", content: reply });
-            } catch (err) {
-                botDiv.innerText = "אופס, אירעה שגיאה בעיבוד הבקשה.";
-                console.error(err);
-            }
-        }
-
-        function appendMessage(text, sender) {
-            const div = document.createElement('div');
-            div.className = `msg ${sender}`;
-            div.innerText = text;
-            chatMessages.appendChild(div);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            return div;
-        }
-
-        sendBtn.addEventListener('click', handleSend);
-        userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') handleSend();
-        });
-    </script>
 </body>
 </html>
