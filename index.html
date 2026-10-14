@@ -918,4 +918,586 @@ function addResultLine(key, value, valueClass = '') {
   const line = document.createElement('div');
   line.className = 'result-line';
   line.innerHTML = `
-    <div class="result-key">
+    <div class="result-key">${key}</div>
+    <div class="result-value ${valueClass}">${value}</div>
+  `;
+  body.appendChild(line);
+}
+
+function addResultWithBadge(key, value, badgeText, badgeClass = '') {
+  const body = document.getElementById('resultsBody');
+  const line = document.createElement('div');
+  line.className = 'result-line';
+  line.innerHTML = `
+    <div class="result-key">${key}</div>
+    <div class="result-value">${value} <span class="result-badge ${badgeClass}">${badgeText}</span></div>
+  `;
+  body.appendChild(line);
+}
+
+function clearResults() {
+  document.getElementById('resultsBody').innerHTML = '';
+}
+
+function isValidIP(ip) {
+  return /^(\d{1,3}\.){3}\d{1,3}$/.test(ip) && 
+         ip.split('.').every(n => +n >= 0 && +n <= 255);
+}
+
+function isValidPhone(phone) {
+  const cleaned = phone.replace(/[\s\-\(\)]/g, '');
+  return /^\+?\d{7,15}$/.test(cleaned);
+}
+
+function isValidDomain(domain) {
+  return /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/.test(domain);
+}
+
+// Mock IP Database for popular IPs
+const ipDatabase = {
+  '8.8.8.8': { country: 'United States', city: 'Mountain View, CA', isp: 'Google LLC', asn: 'AS15169', org: 'Google Public DNS', timezone: 'America/Los_Angeles', lat: 37.4056, lon: -122.0775, threat: 'CLEAN' },
+  '1.1.1.1': { country: 'Australia', city: 'Sydney', isp: 'Cloudflare, Inc.', asn: 'AS13335', org: 'Cloudflare DNS', timezone: 'Australia/Sydney', lat: -33.8688, lon: 151.2093, threat: 'CLEAN' },
+  '9.9.9.9': { country: 'United States', city: 'Berkeley, CA', isp: 'Quad9', asn: 'AS19281', org: 'Quad9 DNS', timezone: 'America/Los_Angeles', lat: 37.8715, lon: -122.2730, threat: 'CLEAN' },
+  '208.67.222.222': { country: 'United States', city: 'San Francisco, CA', isp: 'Cisco OpenDNS', asn: 'AS36692', org: 'OpenDNS', timezone: 'America/Los_Angeles', lat: 37.7749, lon: -122.4194, threat: 'CLEAN' },
+  '77.88.8.8': { country: 'Russia', city: 'Moscow', isp: 'Yandex', asn: 'AS200350', org: 'Yandex DNS', timezone: 'Europe/Moscow', lat: 55.7558, lon: 37.6173, threat: 'MONITORED' },
+  '185.228.168.9': { country: 'Germany', city: 'Frankfurt', isp: 'CleanBrowsing', asn: 'AS62041', org: 'CleanBrowsing DNS', timezone: 'Europe/Berlin', lat: 50.1109, lon: 8.6821, threat: 'CLEAN' },
+};
+
+const countryDatabase = [
+  { name: 'Israel', lat: 31.0461, lon: 34.8516, threat: 'ELEVATED', nodes: 342, flag: '🇮🇱' },
+  { name: 'United States', lat: 37.0902, lon: -95.7129, threat: 'MONITORED', nodes: 1284, flag: '🇺🇸' },
+  { name: 'Russia', lat: 61.5240, lon: 105.3188, threat: 'HIGH', nodes: 892, flag: '🇷🇺' },
+  { name: 'China', lat: 35.8617, lon: 104.1954, threat: 'HIGH', nodes: 1032, flag: '🇨🇳' },
+  { name: 'Iran', lat: 32.4279, lon: 53.6880, threat: 'CRITICAL', nodes: 412, flag: '🇮🇷' },
+  { name: 'United Kingdom', lat: 55.3781, lon: -3.4360, threat: 'LOW', nodes: 654, flag: '🇬🇧' },
+  { name: 'Germany', lat: 51.1657, lon: 10.4515, threat: 'LOW', nodes: 578, flag: '🇩🇪' },
+  { name: 'France', lat: 46.2276, lon: 2.2137, threat: 'LOW', nodes: 512, flag: '🇫🇷' },
+  { name: 'Japan', lat: 36.2048, lon: 138.2529, threat: 'LOW', nodes: 445, flag: '🇯🇵' },
+  { name: 'India', lat: 20.5937, lon: 78.9629, threat: 'MONITORED', nodes: 678, flag: '🇮🇳' },
+  { name: 'Brazil', lat: -14.2350, lon: -51.9253, threat: 'MONITORED', nodes: 389, flag: '🇧🇷' },
+  { name: 'Australia', lat: -25.2744, lon: 133.7751, threat: 'LOW', nodes: 298, flag: '🇦🇺' },
+  { name: 'Canada', lat: 56.1304, lon: -106.3468, threat: 'LOW', nodes: 367, flag: '🇨🇦' },
+  { name: 'South Korea', lat: 35.9078, lon: 127.7669, threat: 'MONITORED', nodes: 423, flag: '🇰🇷' },
+  { name: 'North Korea', lat: 40.3399, lon: 127.5101, threat: 'CRITICAL', nodes: 87, flag: '🇰🇵' },
+  { name: 'Turkey', lat: 38.9637, lon: 35.2433, threat: 'ELEVATED', nodes: 312, flag: '🇹🇷' },
+  { name: 'Egypt', lat: 26.8206, lon: 30.8025, threat: 'ELEVATED', nodes: 234, flag: '🇪🇬' },
+  { name: 'Saudi Arabia', lat: 23.8859, lon: 45.0792, threat: 'ELEVATED', nodes: 278, flag: '🇸🇦' },
+  { name: 'UAE', lat: 23.4241, lon: 53.8478, threat: 'MONITORED', nodes: 187, flag: '🇦🇪' },
+  { name: 'Ukraine', lat: 48.3794, lon: 31.1656, threat: 'CRITICAL', nodes: 456, flag: '🇺🇦' },
+  { name: 'Poland', lat: 51.9194, lon: 19.1451, threat: 'ELEVATED', nodes: 289, flag: '🇵🇱' },
+  { name: 'Italy', lat: 41.8719, lon: 12.5674, threat: 'LOW', nodes: 412, flag: '🇮🇹' },
+  { name: 'Spain', lat: 40.4637, lon: -3.7492, threat: 'LOW', nodes: 356, flag: '🇪🇸' },
+  { name: 'Netherlands', lat: 52.1326, lon: 5.2913, threat: 'LOW', nodes: 312, flag: '🇳🇱' },
+  { name: 'Sweden', lat: 60.1282, lon: 18.6435, threat: 'LOW', nodes: 245, flag: '🇸🇪' },
+  { name: 'Norway', lat: 60.4720, lon: 8.4689, threat: 'LOW', nodes: 198, flag: '🇳🇴' },
+  { name: 'Finland', lat: 61.9241, lon: 25.7482, threat: 'LOW', nodes: 187, flag: '🇫🇮' },
+  { name: 'Mexico', lat: 23.6345, lon: -102.5528, threat: 'MONITORED', nodes: 267, flag: '🇲🇽' },
+  { name: 'Argentina', lat: -38.4161, lon: -63.6167, threat: 'LOW', nodes: 178, flag: '🇦🇷' },
+  { name: 'South Africa', lat: -30.5595, lon: 22.9375, threat: 'MONITORED', nodes: 156, flag: '🇿🇦' },
+  { name: 'Nigeria', lat: 9.0820, lon: 8.6753, threat: 'ELEVATED', nodes: 145, flag: '🇳🇬' },
+  { name: 'Kenya', lat: -0.0236, lon: 37.9062, threat: 'MONITORED', nodes: 98, flag: '🇰🇪' },
+  { name: 'Pakistan', lat: 30.3753, lon: 69.3451, threat: 'HIGH', nodes: 234, flag: '🇵🇰' },
+  { name: 'Afghanistan', lat: 33.9391, lon: 67.7100, threat: 'HIGH', nodes: 76, flag: '🇦🇫' },
+  { name: 'Iraq', lat: 33.2232, lon: 43.6793, threat: 'HIGH', nodes: 123, flag: '🇮🇶' },
+  { name: 'Syria', lat: 34.8021, lon: 38.9968, threat: 'CRITICAL', nodes: 89, flag: '🇸🇾' },
+  { name: 'Lebanon', lat: 33.8547, lon: 35.8623, threat: 'HIGH', nodes: 112, flag: '🇱🇧' },
+  { name: 'Jordan', lat: 30.5852, lon: 36.2384, threat: 'MONITORED', nodes: 134, flag: '🇯🇴' },
+  { name: 'Greece', lat: 39.0742, lon: 21.8243, threat: 'LOW', nodes: 189, flag: '🇬🇷' },
+  { name: 'Cyprus', lat: 35.1264, lon: 33.4299, threat: 'MONITORED', nodes: 67, flag: '🇨🇾' },
+  { name: 'Indonesia', lat: -0.7893, lon: 113.9213, threat: 'MONITORED', nodes: 234, flag: '🇮🇩' },
+  { name: 'Thailand', lat: 15.8700, lon: 100.9925, threat: 'LOW', nodes: 178, flag: '🇹🇭' },
+  { name: 'Vietnam', lat: 14.0583, lon: 108.2772, threat: 'MONITORED', nodes: 198, flag: '🇻🇳' },
+  { name: 'Philippines', lat: 12.8797, lon: 121.7740, threat: 'MONITORED', nodes: 145, flag: '🇵🇭' },
+  { name: 'Singapore', lat: 1.3521, lon: 103.8198, threat: 'LOW', nodes: 123, flag: '🇸🇬' },
+  { name: 'Malaysia', lat: 4.2105, lon: 101.9758, threat: 'LOW', nodes: 134, flag: '🇲🇾' },
+  { name: 'New Zealand', lat: -40.9006, lon: 174.8860, threat: 'LOW', nodes: 87, flag: '🇳🇿' },
+  { name: 'Switzerland', lat: 46.8182, lon: 8.2275, threat: 'LOW', nodes: 145, flag: '🇨🇭' },
+  { name: 'Belgium', lat: 50.5039, lon: 4.4699, threat: 'LOW', nodes: 123, flag: '🇧🇪' },
+  { name: 'Austria', lat: 47.5162, lon: 14.5501, threat: 'LOW', nodes: 98, flag: '🇦🇹' },
+  { name: 'Czech Republic', lat: 49.8175, lon: 15.4730, threat: 'LOW', nodes: 112, flag: '🇨🇿' },
+  { name: 'Romania', lat: 45.9432, lon: 24.9668, threat: 'MONITORED', nodes: 134, flag: '🇷🇴' },
+  { name: 'Bulgaria', lat: 42.7339, lon: 25.4858, threat: 'MONITORED', nodes: 89, flag: '🇧🇬' },
+  { name: 'Hungary', lat: 47.1625, lon: 19.5033, threat: 'LOW', nodes: 78, flag: '🇭🇺' },
+];
+
+const threatColors = {
+  'LOW': '#00ff88',
+  'MONITORED': '#00f0ff',
+  'ELEVATED': '#ffbd2e',
+  'HIGH': '#ff8800',
+  'CRITICAL': '#ff3355',
+  'CLEAN': '#00ff88'
+};
+
+async function performSearch() {
+  const input = document.getElementById('searchInput').value.trim();
+  const btn = document.getElementById('searchBtn');
+  const panel = document.getElementById('resultsPanel');
+  const status = document.getElementById('resultsStatus');
+  const title = document.getElementById('resultsTitle');
+
+  if (!input) {
+    alert('Please enter a value to search');
+    return;
+  }
+
+  // Validate based on type
+  if (currentSearchType === 'ip' && !isValidIP(input)) {
+    alert('Invalid IP address format. Example: 8.8.8.8');
+    return;
+  }
+  if (currentSearchType === 'phone' && !isValidPhone(input)) {
+    alert('Invalid phone number. Example: +972-54-1234567');
+    return;
+  }
+  if (currentSearchType === 'domain' && !isValidDomain(input)) {
+    alert('Invalid domain. Example: example.co.il');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading"></span>SCANNING...';
+  panel.classList.add('visible');
+  clearResults();
+  status.innerHTML = '<span class="loading"></span>RUNNING QUERY...';
+  title.textContent = `▸ ${currentSearchType.toUpperCase()} ANALYSIS: ${input}`;
+
+  logToTerminal(`osint scan --type=${currentSearchType} --target="${input}"`, [
+    { text: `[+] Initiating ${currentSearchType} intelligence scan...`, color: 'var(--text-dim)' },
+    { text: `[+] Querying distributed OSINT databases...`, color: 'var(--text-dim)' }
+  ]);
+
+  await new Promise(r => setTimeout(r, 800));
+
+  clearResults();
+
+  if (currentSearchType === 'ip') {
+    await renderIPResults(input);
+  } else if (currentSearchType === 'phone') {
+    await renderPhoneResults(input);
+  } else {
+    await renderDomainResults(input);
+  }
+
+  status.innerHTML = '● SCAN COMPLETE';
+  status.style.color = 'var(--neon-green)';
+  btn.disabled = false;
+  btn.innerHTML = '▶ EXECUTE SCAN';
+}
+
+async function renderIPResults(ip) {
+  const dbEntry = ipDatabase[ip];
+  
+  addResultLine('▸ IP ADDRESS', ip, 'green');
+  await new Promise(r => setTimeout(r, 200));
+  
+  if (dbEntry) {
+    addResultLine('▸ COUNTRY', dbEntry.country);
+    addResultLine('▸ CITY', dbEntry.city);
+    addResultLine('▸ ISP', dbEntry.isp);
+    addResultLine('▸ ASN', dbEntry.asn);
+    addResultLine('▸ ORGANIZATION', dbEntry.org);
+    addResultLine('▸ TIMEZONE', dbEntry.timezone);
+    addResultLine('▸ COORDINATES', `${dbEntry.lat}, ${dbEntry.lon}`, 'purple');
+    addResultWithBadge('▸ THREAT LEVEL', '', dbEntry.threat, dbEntry.threat === 'CLEAN' ? '' : 'warning');
+  } else {
+    // Generate pseudo-random data based on IP
+    const octets = ip.split('.').map(Number);
+    const hash = octets.reduce((a, b) => a + b, 0);
+    const countries = ['United States', 'Germany', 'Israel', 'United Kingdom', 'France', 'Netherlands', 'Japan', 'Brazil', 'India', 'Russia', 'China'];
+    const isps = ['Comcast', 'Deutsche Telekom', 'Bezeq', 'BT Group', 'Orange S.A.', 'KPN', 'NTT', 'Vivo', 'Jio', 'Rostelecom', 'China Telecom'];
+    const idx = hash % countries.length;
+    
+    addResultLine('▸ COUNTRY', countries[idx]);
+    addResultLine('▸ CITY', 'Unknown');
+    addResultLine('▸ ISP', isps[idx]);
+    addResultLine('▸ ASN', `AS${10000 + (hash * 37) % 50000}`);
+    addResultLine('▸ ORGANIZATION', isps[idx] + ' Network');
+    addResultLine('▸ TIMEZONE', 'UTC');
+    addResultLine('▸ COORDINATES', `${(hash % 180 - 90).toFixed(2)}, ${(hash * 7 % 360 - 180).toFixed(2)}`, 'purple');
+    
+    const threats = ['CLEAN', 'LOW', 'MONITORED', 'ELEVATED'];
+    const threat = threats[hash % threats.length];
+    addResultWithBadge('▸ THREAT LEVEL', '', threat, threat === 'CLEAN' || threat === 'LOW' ? '' : 'warning');
+  }
+  
+  await new Promise(r => setTimeout(r, 300));
+  addResultLine('▸ OPEN PORTS', '22, 80, 443', 'green');
+  addResultLine('▸ REVERSE DNS', 'resolver.unknown.host');
+  addResultLine('▸ LAST SEEN', new Date().toISOString().slice(0, 19).replace('T', ' '), 'purple');
+
+  logToTerminal(`nmap -sV ${ip}`, [
+    { text: `[✓] Scan complete. Results displayed above.`, color: 'var(--neon-green)' }
+  ]);
+}
+
+async function renderPhoneResults(phone) {
+  const cleaned = phone.replace(/[\s\-\(\)]/g, '');
+  
+  addResultLine('▸ PHONE NUMBER', phone, 'green');
+  await new Promise(r => setTimeout(r, 200));
+  
+  // Country code detection
+  let country = 'Unknown', flag = '🌐';
+  if (cleaned.startsWith('+972') || cleaned.startsWith('972')) { country = 'Israel'; flag = '🇮🇱'; }
+  else if (cleaned.startsWith('+1') || cleaned.startsWith('1')) { country = 'United States/Canada'; flag = '🇺🇸'; }
+  else if (cleaned.startsWith('+44') || cleaned.startsWith('44')) { country = 'United Kingdom'; flag = '🇬🇧'; }
+  else if (cleaned.startsWith('+49') || cleaned.startsWith('49')) { country = 'Germany'; flag = '🇩🇪'; }
+  else if (cleaned.startsWith('+33') || cleaned.startsWith('33')) { country = 'France'; flag = '🇫🇷'; }
+  else if (cleaned.startsWith('+7') || cleaned.startsWith('7')) { country = 'Russia'; flag = '🇷🇺'; }
+  else if (cleaned.startsWith('+86') || cleaned.startsWith('86')) { country = 'China'; flag = '🇨🇳'; }
+  else if (cleaned.startsWith('+91') || cleaned.startsWith('91')) { country = 'India'; flag = '🇮🇳'; }
+  
+  addResultLine('▸ COUNTRY', `${flag} ${country}`);
+  addResultLine('▸ CARRIER', 'Detecting...');
+  await new Promise(r => setTimeout(r, 300));
+  
+  const carriers = ['Cellcom', 'Partner', 'Pelephone', 'Hot Mobile', 'Golan Telecom', 'Vodafone', 'T-Mobile', 'AT&T', 'Verizon'];
+  const hash = cleaned.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  addResultLine('▸ CARRIER', carriers[hash % carriers.length]);
+  addResultLine('▸ LINE TYPE', hash % 2 === 0 ? 'Mobile' : 'Landline');
+  addResultLine('▸ VALID', 'YES', 'green');
+  
+  const riskScore = hash % 100;
+  addResultWithBadge('▸ RISK SCORE', `${riskScore}/100`, riskScore > 60 ? 'HIGH' : riskScore > 30 ? 'MEDIUM' : 'LOW', riskScore > 60 ? 'warning' : '');
+  
+  addResultLine('▸ REPUTATION', riskScore > 60 ? 'Reported as spam' : 'Clean', riskScore > 60 ? 'red' : 'green');
+  addResultLine('▸ SOCIAL PROFILES', riskScore > 50 ? '2 profiles found' : 'None found');
+
+  logToTerminal(`phone-lookup --number="${phone}"`, [
+    { text: `[✓] Phone intelligence retrieved.`, color: 'var(--neon-green)' }
+  ]);
+}
+
+async function renderDomainResults(domain) {
+  addResultLine('▸ DOMAIN', domain, 'green');
+  await new Promise(r => setTimeout(r, 200));
+  
+  const hash = domain.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  const tld = domain.split('.').pop();
+  
+  addResultLine('▸ TLD', '.' + tld);
+  addResultLine('▸ REGISTRAR', ['GoDaddy', 'Namecheap', 'Cloudflare', 'Google Domains', 'IONOS'][hash % 5]);
+  addResultLine('▸ CREATED', `${2000 + (hash % 20)}-${String((hash % 12) + 1).padStart(2, '0')}-15`);
+  addResultLine('▸ EXPIRES', `${2026 + (hash % 5)}-${String((hash % 12) + 1).padStart(2, '0')}-15`, 'purple');
+  addResultLine('▸ REGISTRANT', 'REDACTED FOR PRIVACY');
+  addResultLine('▸ NAME SERVERS', `ns1.${domain}`, 'green');
+  addResultLine('▸ A RECORD', `${(hash % 254) + 1}.${(hash * 3 % 254) + 1}.${(hash * 7 % 254) + 1}.${(hash * 11 % 254) + 1}`);
+  addResultLine('▸ MX RECORD', `mail.${domain}`);
+  addResultLine('▸ SSL ISSUER', "Let's Encrypt");
+  addResultLine('▸ SERVER', ['nginx', 'Apache', 'IIS', 'Cloudflare'][hash % 4]);
+  addResultLine('▸ TECH STACK', ['WordPress', 'React', 'Node.js', 'PHP', 'Django'][hash % 5], 'purple');
+
+  logToTerminal(`whois ${domain}`, [
+    { text: `[✓] Domain reconnaissance complete.`, color: 'var(--neon-green)' }
+  ]);
+}
+
+/* ============================================================
+   GLOBE MAP (Canvas-based 3D-looking globe)
+   ============================================================ */
+const globeCanvas = document.getElementById('globe');
+const gctx = globeCanvas.getContext('2d');
+const tooltip = document.getElementById('globeTooltip');
+
+let rotation = 0;
+let rotationSpeed = 0.003;
+let isDragging = false;
+let lastMouseX = 0;
+let mouseX = 0, mouseY = 0;
+let hoveredCountry = null;
+let autoRotate = true;
+let mapMode = 'all';
+
+function resizeGlobe() {
+  const rect = globeCanvas.parentElement.getBoundingClientRect();
+  globeCanvas.width = rect.width;
+  globeCanvas.height = rect.height;
+}
+resizeGlobe();
+window.addEventListener('resize', resizeGlobe);
+
+// Convert lat/lon to 3D coordinates
+function latLonToXYZ(lat, lon, radius) {
+  const phi = (90 - lat) * Math.PI / 180;
+  const theta = (lon + 180) * Math.PI / 180;
+  return {
+    x: -radius * Math.sin(phi) * Math.cos(theta),
+    y: radius * Math.cos(phi),
+    z: radius * Math.sin(phi) * Math.sin(theta)
+  };
+}
+
+// Rotate point around Y axis
+function rotateY(p, angle) {
+  const cos = Math.cos(angle);
+  const sin = Math.sin(angle);
+  return {
+    x: p.x * cos - p.z * sin,
+    y: p.y,
+    z: p.x * sin + p.z * cos
+  };
+}
+
+// Simple projection
+function project(p, cx, cy) {
+  return { x: cx + p.x, y: cy + p.y, z: p.z };
+}
+
+function drawGlobe() {
+  const w = globeCanvas.width;
+  const h = globeCanvas.height;
+  const cx = w / 2;
+  const cy = h / 2;
+  const radius = Math.min(w, h) * 0.38;
+
+  // Clear with trail
+  gctx.fillStyle = 'rgba(5, 7, 9, 0.15)';
+  gctx.fillRect(0, 0, w, h);
+
+  // Draw outer glow
+  const glowGrad = gctx.createRadialGradient(cx, cy, radius * 0.8, cx, cy, radius * 1.3);
+  glowGrad.addColorStop(0, 'rgba(0, 240, 255, 0.15)');
+  glowGrad.addColorStop(0.5, 'rgba(0, 240, 255, 0.05)');
+  glowGrad.addColorStop(1, 'transparent');
+  gctx.fillStyle = glowGrad;
+  gctx.fillRect(0, 0, w, h);
+
+  // Draw main sphere
+  const sphereGrad = gctx.createRadialGradient(cx - radius * 0.3, cy - radius * 0.3, radius * 0.1, cx, cy, radius);
+  sphereGrad.addColorStop(0, 'rgba(0, 60, 90, 0.4)');
+  sphereGrad.addColorStop(0.7, 'rgba(5, 15, 25, 0.6)');
+  sphereGrad.addColorStop(1, 'rgba(0, 20, 40, 0.8)');
+  gctx.beginPath();
+  gctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  gctx.fillStyle = sphereGrad;
+  gctx.fill();
+
+  // Sphere outline
+  gctx.beginPath();
+  gctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  gctx.strokeStyle = 'rgba(0, 240, 255, 0.5)';
+  gctx.lineWidth = 1.5;
+  gctx.stroke();
+
+  // Draw latitude lines
+  gctx.strokeStyle = 'rgba(0, 240, 255, 0.15)';
+  gctx.lineWidth = 0.8;
+  for (let lat = -60; lat <= 60; lat += 30) {
+    const phi = (90 - lat) * Math.PI / 180;
+    const r = radius * Math.sin(phi);
+    const y = radius * Math.cos(phi);
+    gctx.beginPath();
+    gctx.ellipse(cx, cy + y, r, r * 0.15, 0, 0, Math.PI * 2);
+    gctx.stroke();
+  }
+
+  // Draw longitude lines (rotating)
+  for (let lon = 0; lon < 360; lon += 30) {
+    const adjustedLon = lon + rotation * 180 / Math.PI;
+    gctx.beginPath();
+    for (let lat = -90; lat <= 90; lat += 5) {
+      const p3d = latLonToXYZ(lat, adjustedLon - 180, radius);
+      const rotated = rotateY(p3d, 0);
+      if (rotated.z > -radius * 0.1) {
+        const proj = project(rotated, cx, cy);
+        if (lat === -90) gctx.moveTo(proj.x, proj.y);
+        else gctx.lineTo(proj.x, proj.y);
+      } else {
+        // Skip back side
+      }
+    }
+    gctx.strokeStyle = 'rgba(0, 240, 255, 0.12)';
+    gctx.stroke();
+  }
+
+  // Sort countries by z-depth for proper rendering
+  const renderedCountries = countryDatabase.map(c => {
+    const p3d = latLonToXYZ(c.lat, c.lon, radius);
+    const rotated = rotateY(p3d, rotation);
+    return { ...c, rotated };
+  }).sort((a, b) => a.rotated.z - b.rotated.z);
+
+  // Draw countries
+  renderedCountries.forEach(c => {
+    // Only draw front-facing points
+    if (c.rotated.z < -radius * 0.15) return;
+    
+    const proj = project(c.rotated, cx, cy);
+    const depth = (c.rotated.z + radius) / (2 * radius); // 0 = front, 1 = back
+    const size = 4 + (1 - depth) * 4;
+    const alpha = 0.4 + (1 - depth) * 0.6;
+    const color = threatColors[c.threat] || '#00f0ff';
+
+    // Check map mode filter
+    let show = true;
+    if (mapMode === 'threats' && c.threat !== 'HIGH' && c.threat !== 'CRITICAL' && c.threat !== 'ELEVATED') show = false;
+    if (mapMode === 'israel' && c.name !== 'Israel') show = false;
+
+    if (!show) return;
+
+    // Draw pulse ring for Israel and high-threat countries
+    if (c.name === 'Israel' || c.threat === 'CRITICAL') {
+      const pulseTime = Date.now() / 500;
+      const pulseR = size + Math.sin(pulseTime + c.lat) * 6 + 6;
+      gctx.beginPath();
+      gctx.arc(proj.x, proj.y, pulseR, 0, Math.PI * 2);
+      gctx.strokeStyle = color.replace(')', `, ${alpha * 0.3})`).replace('rgb', 'rgba').replace('#', 'rgba(').slice(0, 30);
+      gctx.strokeStyle = hexToRgba(color, alpha * 0.3);
+      gctx.lineWidth = 1;
+      gctx.stroke();
+    }
+
+    // Draw glow
+    const grd = gctx.createRadialGradient(proj.x, proj.y, 0, proj.x, proj.y, size * 3);
+    grd.addColorStop(0, hexToRgba(color, alpha * 0.6));
+    grd.addColorStop(1, 'transparent');
+    gctx.fillStyle = grd;
+    gctx.beginPath();
+    gctx.arc(proj.x, proj.y, size * 3, 0, Math.PI * 2);
+    gctx.fill();
+
+    // Draw dot
+    gctx.beginPath();
+    gctx.arc(proj.x, proj.y, size, 0, Math.PI * 2);
+    gctx.fillStyle = hexToRgba(color, alpha);
+    gctx.fill();
+
+    // Draw inner dot
+    gctx.beginPath();
+    gctx.arc(proj.x, proj.y, size * 0.4, 0, Math.PI * 2);
+    gctx.fillStyle = hexToRgba('#ffffff', alpha);
+    gctx.fill();
+
+    // Store screen position for hover detection
+    c._screenX = proj.x;
+    c._screenY = proj.y;
+    c._screenSize = size;
+  });
+
+  // Auto rotate
+  if (autoRotate && !isDragging) {
+    rotation += rotationSpeed;
+  }
+}
+
+function hexToRgba(hex, alpha) {
+  if (hex.startsWith('rgba') || hex.startsWith('rgb')) return hex;
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function globeLoop() {
+  drawGlobe();
+  requestAnimationFrame(globeLoop);
+}
+globeLoop();
+
+// Update HUD
+setInterval(() => {
+  document.getElementById('hudNodes').textContent = countryDatabase.length * 42;
+  document.getElementById('hudActive').textContent = Math.floor(Math.random() * 200) + 300;
+  document.getElementById('hudRotation').textContent = autoRotate ? 'AUTO' : 'PAUSED';
+}, 1000);
+
+// Globe interactions
+globeCanvas.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  lastMouseX = e.clientX;
+  autoRotate = false;
+});
+
+globeCanvas.addEventListener('mousemove', (e) => {
+  const rect = globeCanvas.getBoundingClientRect();
+  mouseX = e.clientX - rect.left;
+  mouseY = e.clientY - rect.top;
+
+  if (isDragging) {
+    const delta = e.clientX - lastMouseX;
+    rotation += delta * 0.01;
+    lastMouseX = e.clientX;
+  }
+
+  // Hover detection
+  let found = null;
+  let minDist = Infinity;
+  countryDatabase.forEach(c => {
+    if (c._screenX !== undefined) {
+      const dist = Math.hypot(c._screenX - mouseX, c._screenY - mouseY);
+      if (dist < (c._screenSize + 8) && dist < minDist) {
+        minDist = dist;
+        found = c;
+      }
+    }
+  });
+
+  if (found) {
+    hoveredCountry = found;
+    tooltip.style.display = 'block';
+    tooltip.style.left = (mouseX + 20) + 'px';
+    tooltip.style.top = (mouseY + 20) + 'px';
+    tooltip.innerHTML = `
+      <div class="country-name">${found.flag} ${found.name}</div>
+      <div class="country-info">
+        THREAT LEVEL: <span class="highlight" style="color:${threatColors[found.threat]}">${found.threat}</span><br>
+        ACTIVE NODES: <span class="highlight">${found.nodes}</span><br>
+        COORDINATES: <span class="highlight">${found.lat.toFixed(2)}, ${found.lon.toFixed(2)}</span>
+      </div>
+    `;
+    globeCanvas.style.cursor = 'pointer';
+  } else {
+    hoveredCountry = null;
+    tooltip.style.display = 'none';
+    globeCanvas.style.cursor = isDragging ? 'grabbing' : 'grab';
+  }
+});
+
+globeCanvas.addEventListener('mouseup', () => {
+  isDragging = false;
+  autoRotate = true;
+});
+
+globeCanvas.addEventListener('mouseleave', () => {
+  isDragging = false;
+  autoRotate = true;
+  tooltip.style.display = 'none';
+});
+
+// Touch support
+globeCanvas.addEventListener('touchstart', (e) => {
+  isDragging = true;
+  lastMouseX = e.touches[0].clientX;
+  autoRotate = false;
+});
+
+globeCanvas.addEventListener('touchmove', (e) => {
+  if (isDragging) {
+    const delta = e.touches[0].clientX - lastMouseX;
+    rotation += delta * 0.01;
+    lastMouseX = e.touches[0].clientX;
+  }
+});
+
+globeCanvas.addEventListener('touchend', () => {
+  isDragging = false;
+  autoRotate = true;
+});
+
+function toggleMapMode(btn, mode) {
+  document.querySelectorAll('.map-control-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  mapMode = mode;
+}
+
+/* ============================================================
+   ENTER KEY TO SEARCH
+   ============================================================ */
+document.getElementById('searchInput').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') performSearch();
+});
+</script>
+
+</body>
+</html>
