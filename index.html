@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XOSINT - Cyber Intelligence Hub</title>
-    <!-- טעינת פונט Ultra בדיוק כמו בתמונה ששלחת -->
+    <!-- טעינת פונט Ultra בדיוק כמו שביקשת -->
     <link href="https://fonts.googleapis.com/css2?family=Ultra&display=swap" rel="stylesheet">
     <style>
         :root {
             --neon-blue: #00f3ff;
             --neon-green: #00ff66;
-            --dark-bg: #010308;
-            --panel-bg: rgba(2, 10, 22, 0.92);
-            --border-color: rgba(0, 243, 255, 0.4);
+            --dark-bg: #010409;
+            --panel-bg: rgba(2, 12, 28, 0.88);
+            --border-color: rgba(0, 243, 255, 0.45);
             --border-green: rgba(0, 255, 102, 0.5);
         }
 
@@ -36,14 +36,14 @@
             z-index: -1;
         }
 
-        /* מסך כניסה */
+        /* מסך כניסה מאובטח */
         #login-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(1, 3, 8, 0.98);
+            background: rgba(1, 4, 9, 0.96);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -55,11 +55,11 @@
 
         .login-box {
             background: var(--panel-bg);
-            border: 2px solid var(--neon-green);
+            border: 2px solid var(--neon-blue);
             padding: 50px 40px;
             border-radius: 16px;
             text-align: center;
-            box-shadow: 0 0 50px rgba(0, 255, 102, 0.3);
+            box-shadow: 0 0 50px rgba(0, 243, 255, 0.3);
             width: 380px;
         }
 
@@ -73,19 +73,19 @@
 
         @keyframes pulseLogo {
             0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(0, 255, 102, 0.5)); }
-            100% { transform: scale(1.05); filter: drop-shadow(0 0 20px rgba(0, 243, 255, 0.8)); }
+            100% { transform: scale(1.05); filter: drop-shadow(0 0 25px rgba(0, 243, 255, 0.9)); }
         }
 
         .login-box h2 {
-            color: var(--neon-green);
+            color: var(--neon-blue);
             margin: 0 0 5px 0;
             letter-spacing: 3px;
             font-size: 26px;
-            text-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
+            text-shadow: 0 0 12px rgba(0, 243, 255, 0.6);
         }
 
         .login-box p {
-            color: var(--neon-blue);
+            color: var(--neon-green);
             font-size: 10px;
             margin-bottom: 30px;
             letter-spacing: 2px;
@@ -105,12 +105,12 @@
             outline: none;
             box-sizing: border-box;
             letter-spacing: 3px;
-            box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.2);
+            box-shadow: inset 0 0 12px rgba(0, 243, 255, 0.25);
         }
 
         .login-btn {
             width: 100%;
-            background: linear-gradient(135deg, #003366, #00ff66);
+            background: linear-gradient(135deg, #003366, #00f3ff);
             color: #000;
             border: none;
             padding: 16px;
@@ -122,12 +122,12 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             transition: 0.25s;
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.4);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
         }
 
         .login-btn:hover {
-            background: var(--neon-blue);
-            box-shadow: 0 0 30px var(--neon-blue);
+            background: var(--neon-green);
+            box-shadow: 0 0 35px var(--neon-green);
             transform: translateY(-2px);
         }
 
@@ -140,7 +140,7 @@
             text-shadow: 0 0 8px rgba(255, 51, 51, 0.5);
         }
 
-        /* אפליקציה ראשית */
+        /* האפליקציה הראשית */
         #main-app {
             display: none;
             padding: 30px;
@@ -155,6 +155,10 @@
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 20px;
             margin-bottom: 30px;
+            background: rgba(1, 8, 18, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-radius: 12px;
         }
 
         .brand {
@@ -184,14 +188,14 @@
         }
 
         .status-badge {
-            background: rgba(0, 255, 102, 0.12);
-            border: 1px solid var(--neon-green);
-            color: var(--neon-green);
+            background: rgba(0, 243, 255, 0.12);
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
             padding: 8px 18px;
             border-radius: 20px;
             font-size: 11px;
             letter-spacing: 2px;
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
         }
 
         .nav-tools {
@@ -212,13 +216,14 @@
             font-size: 12px;
             letter-spacing: 1.5px;
             transition: all 0.25s ease;
+            backdrop-filter: blur(10px);
         }
 
         .tool-tab:hover, .tool-tab.active {
-            background: rgba(0, 243, 255, 0.18);
+            background: rgba(0, 243, 255, 0.2);
             border-color: var(--neon-blue);
             color: var(--neon-blue);
-            box-shadow: 0 0 25px rgba(0, 243, 255, 0.4);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.5);
             transform: translateY(-2px);
         }
 
@@ -227,9 +232,10 @@
             border: 2px solid var(--border-color);
             border-radius: 14px;
             padding: 40px;
-            box-shadow: 0 0 40px rgba(0, 243, 255, 0.15);
+            box-shadow: 0 0 50px rgba(0, 243, 255, 0.2);
             min-height: 450px;
             position: relative;
+            backdrop-filter: blur(15px);
         }
 
         .tool-panel {
@@ -247,7 +253,7 @@
             margin-top: 0;
             margin-bottom: 10px;
             text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+            text-shadow: 0 0 12px rgba(0, 243, 255, 0.5);
         }
 
         .panel-desc {
@@ -274,12 +280,12 @@
             font-family: 'Ultra', serif;
             outline: none;
             transition: 0.25s;
-            box-shadow: inset 0 0 10px rgba(0, 255, 102, 0.1);
+            box-shadow: inset 0 0 12px rgba(0, 243, 255, 0.15);
         }
 
         .osint-input:focus {
-            border-color: var(--neon-green);
-            box-shadow: 0 0 25px rgba(0, 255, 102, 0.35), inset 0 0 10px rgba(0, 255, 102, 0.2);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.4), inset 0 0 12px rgba(0, 243, 255, 0.25);
         }
 
         .action-btn {
@@ -295,12 +301,12 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             transition: 0.25s;
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
         }
 
         .action-btn:hover {
             background: var(--neon-blue);
-            box-shadow: 0 0 30px var(--neon-blue);
+            box-shadow: 0 0 35px var(--neon-blue);
             transform: translateY(-2px);
         }
 
@@ -331,6 +337,7 @@
 </head>
 <body>
 
+    <!-- רקע אנימציית גלים תלת-ממדית כחולה (Wavy Grid) -->
     <canvas id="bg-canvas"></canvas>
 
     <!-- מסך כניסה -->
@@ -505,6 +512,7 @@
             }, 1000);
         }
 
+        // אנימציית רקע גלים כחולים (Wavy 3D Grid)
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
 
@@ -515,53 +523,69 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        const particles = [];
-        for (let i = 0; i < 55; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                vx: (Math.random() - 0.5) * 0.8,
-                vy: (Math.random() - 0.5) * 0.8
-            });
-        }
+        let time = 0;
 
-        function drawCyberBg() {
-            ctx.fillStyle = '#010308';
+        function drawWavyGrid() {
+            ctx.fillStyle = '#010409';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            ctx.strokeStyle = 'rgba(0, 243, 255, 0.08)';
-            ctx.lineWidth = 1;
+            const cols = 35;
+            const rows = 25;
+            const spacingX = canvas.width / (cols - 1);
+            const spacingY = canvas.height / (rows - 1);
 
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 150) {
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
+            time += 0.02;
+
+            ctx.strokeStyle = 'rgba(0, 243, 255, 0.22)';
+            ctx.lineWidth = 1.2;
+
+            const points = [];
+
+            // יצירת נקודות הרשת עם גלים תלת-ממדיים
+            for (let r = 0; r < rows; r++) {
+                points[r] = [];
+                for (let c = 0; c < cols; c++) {
+                    const x = c * spacingX;
+                    const y = r * spacingY;
+                    
+                    // חישוב גל סינוס וקוסינוס שיוצר את העיוות והתנועה
+                    const wave1 = Math.sin(c * 0.3 + time) * 25;
+                    const wave2 = Math.cos(r * 0.3 + time * 0.8) * 25;
+                    const wave3 = Math.sin((c + r) * 0.2 + time * 1.2) * 15;
+
+                    points[r][c] = {
+                        x: x + wave3,
+                        y: y + wave1 + wave2
+                    };
                 }
             }
 
-            particles.forEach(p => {
-                p.x += p.vx;
-                p.y += p.vy;
-
-                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
-                ctx.fillStyle = '#00ff66';
+            // ציור קווי הרוחב של הרשת
+            for (let r = 0; r < rows; r++) {
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-                ctx.fill();
-            });
+                for (let c = 0; c < cols; c++) {
+                    const p = points[r][c];
+                    if (c === 0) ctx.moveTo(p.x, p.y);
+                    else ctx.lineTo(p.x, p.y);
+                }
+                ctx.stroke();
+            }
 
-            requestAnimationFrame(drawCyberBg);
+            // ציור קווי האורך של הרשת
+            for (let c = 0; c < cols; c++) {
+                ctx.beginPath();
+                for (let r = 0; r < rows; r++) {
+                    const p = points[r][c];
+                    if (r === 0) ctx.moveTo(p.x, p.y);
+                    else ctx.lineTo(p.x, p.y);
+                }
+                ctx.stroke();
+            }
+
+            requestAnimationFrame(drawWavyGrid);
         }
-        drawCyberBg();
+
+        drawWavyGrid();
     </script>
 </body>
 </html>
