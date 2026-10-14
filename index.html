@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Israel Cyber Defense - National Cyber Portal</title>
-    <!-- ייבוא פונט כבד ומרשים בסגנון מודרני -->
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --card-bg: rgba(10, 15, 30, 0.75);
             --accent-blue: #38bdf8;
-            --accent-red: #ef4444;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --border-color: rgba(56, 189, 248, 0.25);
@@ -33,14 +31,12 @@
             font-family: 'Inter', sans-serif;
         }
 
-        /* הגדרת הפונט העבה לכותרות */
         h1, h2, h3, .logo-text h1, .hero h2 {
             font-family: 'Anton', sans-serif;
             letter-spacing: 1.5px;
             text-transform: uppercase;
         }
 
-        /* קנבס לרקע גלי התלת-ממד הזז על פני כל האתר */
         #wave-canvas {
             position: fixed;
             top: 0;
@@ -51,7 +47,6 @@
             pointer-events: none;
         }
 
-        /* Header */
         header {
             display: flex;
             justify-content: space-between;
@@ -112,18 +107,17 @@
             color: var(--accent-blue);
         }
 
-        /* Hero Section */
         .hero {
             text-align: center;
-            padding: 80px 20px 50px 20px;
+            padding: 100px 20px 60px 20px;
             position: relative;
             z-index: 2;
         }
 
         .hero h2 {
-            font-size: 3.5rem;
+            font-size: 4rem;
             font-weight: normal;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             background: linear-gradient(180deg, #ffffff, #38bdf8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -131,38 +125,17 @@
         }
 
         .hero p {
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             color: var(--text-muted);
             max-width: 750px;
-            margin: 0 auto 35px auto;
+            margin: 0 auto;
             line-height: 1.6;
         }
 
-        .emergency-btn {
-            background-color: var(--accent-red);
-            color: white;
-            border: none;
-            padding: 16px 36px;
-            font-size: 1.05rem;
-            font-weight: 800;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 0 25px rgba(239, 68, 68, 0.5);
-            transition: transform 0.2s, opacity 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .emergency-btn:hover {
-            opacity: 0.95;
-            transform: scale(1.03);
-        }
-
-        /* Content Grid */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px 20px 70px 20px;
+            padding: 20px 20px 80px 20px;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 30px;
@@ -195,22 +168,12 @@
             font-weight: normal;
         }
 
-        .card p, .card ul {
+        .card p {
             color: var(--text-muted);
             font-size: 0.95rem;
             line-height: 1.6;
         }
 
-        .card ul {
-            list-style-position: inside;
-            margin-top: 12px;
-        }
-
-        .card ul li {
-            margin-bottom: 8px;
-        }
-
-        /* Footer */
         footer {
             text-align: center;
             padding: 30px;
@@ -228,66 +191,50 @@
 </head>
 <body>
 
-    <!-- קנבס לרקע גלי רשת הסייבר התלת-ממדיים -->
     <canvas id="wave-canvas"></canvas>
 
-    <!-- Header -->
     <header>
         <div class="logo-container">
-            <img src="image_3fa975.jpg" alt="Israel Cyber Logo" class="logo-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22><circle cx=%2225%22 cy=%2225%22 r=%2223%22 fill=%22%230ea5e9%22/><text x=%2225%22 y=%2231%22 fill=%22white%22 font-size=%2214%22 font-family=%22sans-serif%22 text-anchor=%22middle%22>IL</text></svg>'">
+            <!-- הלוגו החדש -->
+            <img src="logo.png" alt="Israel Cyber Logo" class="logo-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22><circle cx=%2225%22 cy=%2225%22 r=%2223%22 fill=%22%230ea5e9%22/><text x=%2225%22 y=%2231%22 fill=%22white%22 font-size=%2214%22 text-anchor=%22middle%22>IL</text></svg>'">
             <div class="logo-text">
                 <h1>National Cyber Shield</h1>
                 <p>Protecting Israel's Digital Space</p>
             </div>
         </div>
         <nav>
-            <a href="#alerts">Security Alerts</a>
-            <a href="#guidelines">Public Guidelines</a>
-            <a href="#report">Emergency Report</a>
+            <a href="#status">Security Status</a>
+            <a href="#systems">Infrastructure</a>
+            <a href="#defense">Operations</a>
         </nav>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero">
         <h2>The Digital Frontline of Israel</h2>
-        <p>National emergency and protection portal dedicated to cyber security defense, threat mitigation, and safeguarding citizens and critical infrastructure 24/7.</p>
-        <button class="emergency-btn" onclick="alert('For immediate cyber incident reporting, contact the National Emergency Cyber Hotline: 119')">🚨 Emergency Cyber Report (119)</button>
+        <p>Advanced national cyber defense operations, real-time threat neutralization, and secure digital infrastructure protection.</p>
     </section>
 
-    <!-- Main Grid -->
-    <div class="container" id="guidelines">
-        <div class="card">
-            <h3>🛡️ Individual Security Guidelines</h3>
-            <p>Essential steps to secure your personal accounts and digital assets against modern cyber threats:</p>
-            <ul>
-                <li>Enable Two-Factor Authentication (2FA) across all critical accounts.</li>
-                <li>Avoid clicking suspicious links, unknown attachments, or phishing messages.</li>
-                <li>Use strong, unique passwords for every online service and platform.</li>
-                <li>Keep operating systems and security software updated regularly.</li>
-            </ul>
+    <div class="container">
+        <div class="card" id="status">
+            <h3>🛡️ Network Defense</h3>
+            <p>Continuous monitoring and automated interception of hostile scanning vectors targeting national networks and strategic digital assets 24/7.</p>
         </div>
 
-        <div class="card" id="alerts">
-            <h3>⚠️ Security Alerts & Status</h3>
-            <p><strong>High Alert Status:</strong> Multiple malicious campaigns targeting public infrastructure and user accounts through advanced social engineering have been detected and neutralized.</p>
-            <br>
-            <p>We advise maintaining extreme vigilance, declining requests from unverified sources, and never sharing authentication codes.</p>
+        <div class="card" id="systems">
+            <h3>⚠️ Threat Intelligence</h3>
+            <p>Advanced telemetry tracking and proactive identification of malicious actors, coordinated disruption attempts, and cyber warfare initiatives.</p>
         </div>
 
-        <div class="card" id="report">
-            <h3>📢 Incident Response Center</h3>
-            <p>Have you encountered suspicious cyber activity, account takeover attempts, or network intrusions? Our emergency response team is ready to assist.</p>
-            <br>
-            <p>Contact the National Cyber Operations Center directly via emergency hotline <strong>119</strong> or through authorized channels.</p>
+        <div class="card" id="defense">
+            <h3>📢 Secure Operations</h3>
+            <p>Ensuring complete resilience across public channels, encrypted communications layers, and governmental digital spaces against disruption.</p>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
         <p>All Rights Reserved © 2026 National Cyber Defense Portal - Israel</p>
     </footer>
 
-    <!-- סקריפט אנימציית גלי רשת תלת-ממדיים ברקע -->
     <script>
         const canvas = document.getElementById('wave-canvas');
         const ctx = canvas.getContext('2d');
@@ -315,8 +262,7 @@
                 for (let j = 0; j < rows; j++) {
                     points[i][j] = {
                         x: (i - 1) * spacing,
-                        y: (j - 1) * spacing,
-                        baseZ: Math.random() * 20
+                        y: (j - 1) * spacing
                     };
                 }
             }
@@ -326,7 +272,6 @@
 
         function animate() {
             ctx.clearRect(0, 0, width, height);
-
             angle += 0.025;
 
             for (let i = 0; i < cols; i++) {
