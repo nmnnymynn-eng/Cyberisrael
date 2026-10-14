@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wireframe Human & Square City - GitHub Pages</title>
+    <title>Wireframe SpongeBob Interactive - GitHub Pages</title>
     <style>
         body {
             margin: 0;
@@ -33,7 +33,7 @@
             top: 25px;
             left: 50%;
             transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.45);
+            color: rgba(255, 255, 255, 0.5);
             font-size: 11px;
             letter-spacing: 2px;
             pointer-events: none;
@@ -84,14 +84,14 @@
 </head>
 <body>
 
-    <div class="instructions">Drag to rotate camera • Use action buttons below</div>
+    <div class="instructions">Move mouse to control boxing fists & punch SpongeBob • Click and drag to rotate view</div>
     <div id="canvas-container"></div>
     <div class="watermark">PI-SLICES</div>
 
     <div class="controls">
-        <button onclick="punchCharacter()">Punch</button>
+        <button onclick="powerPunch()">Power Punch</button>
         <button onclick="spinCharacter()">Spin Fast</button>
-        <button onclick="glitchCharacter()">Explode</button>
+        <button onclick="explodeCharacter()">Explode</button>
         <button onclick="resetCharacter()">Reset</button>
     </div>
 
@@ -100,17 +100,20 @@
     
     <script>
         let scene, camera, renderer, controls;
-        let humanGroup, parts = [], rightArm, leftArm;
+        let snoopGroup, parts = [];
+        let leftFist, rightFist;
         let actionState = 'normal';
         let actionTimer = 0;
+        let mouse = new THREE.Vector2();
+        let targetFistPos = new THREE.Vector3();
 
         function init() {
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x010101);
-            scene.fog = new THREE.FogExp2(0x010101, 0.035);
+            scene.fog = new THREE.FogExp2(0x010101, 0.03);
 
             camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 2, 7.5);
+            camera.position.set(0, 2.5, 7.5);
 
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
@@ -125,30 +128,32 @@
             createGridFloor();
             createDenseSquareCity();
             createPedestal();
-            createHumanWireframe();
+            createWireframeSpongeBob();
+            createInteractiveFists();
 
             window.addEventListener('resize', onWindowResize);
+            window.addEventListener('mousemove', onMouseMove);
+
             animate();
         }
 
         // רצפת רשת ענקית
         function createGridFloor() {
-            const grid = new THREE.GridHelper(80, 80, 0x333333, 0x111111);
+            const grid = new THREE.GridHelper(90, 90, 0x333333, 0x111111);
             grid.position.y = -1.5;
             scene.add(grid);
         }
 
-        // יצירת עיר מרובעת צפופה ועצומה מסביב
+        // עיר מרובעת עצומה וצפופה סביב
         function createDenseSquareCity() {
             const cityGroup = new THREE.Group();
             const buildingGeo = new THREE.BoxGeometry(1.6, 1, 1.6);
             const buildingMat = new THREE.MeshBasicMaterial({
-                color: 0x262626,
+                color: 0x222222,
                 wireframe: true
             });
 
-            // פריסת בניינים מרובעים במעגלים סביב המרכז
-            const radiusSteps = [4, 7, 10, 13];
+            const radiusSteps = [4, 7, 10, 13, 16];
             radiusSteps.forEach((r, index) => {
                 const count = 8 + index * 4;
                 for (let i = 0; i < count; i++) {
@@ -156,7 +161,7 @@
                     const x = Math.cos(angle) * (r + (Math.random() * 1 - 0.5));
                     const z = Math.sin(angle) * (r + (Math.random() * 1 - 0.5));
                     
-                    const height = Math.random() * 6 + 3;
+                    const height = Math.random() * 7 + 3;
                     const building = new THREE.Mesh(buildingGeo, buildingMat);
                     building.scale.set(1, height, 1);
                     building.position.set(x, -1.5 + height / 2, z);
@@ -167,12 +172,12 @@
             scene.add(cityGroup);
         }
 
-        // בסיס עמידה מרכזי
+        // בסיס מרכזי משובץ
         function createPedestal() {
             const pedestalGroup = new THREE.Group();
             pedestalGroup.position.y = -1.5;
 
-            const boxGeo = new THREE.BoxGeometry(1.4, 0.4, 1.4);
+            const boxGeo = new THREE.BoxGeometry(1.5, 0.4, 1.5);
             const boxMat = new THREE.MeshBasicMaterial({ color: 0x020202 });
             const box = new THREE.Mesh(boxGeo, boxMat);
             pedestalGroup.add(box);
@@ -182,16 +187,16 @@
             const wireBox = new THREE.LineSegments(edgesGeo, wireMat);
             pedestalGroup.add(wireBox);
 
-            const gridHelper = new THREE.GridHelper(1.4, 4, 0xffffff, 0x444444);
+            const gridHelper = new THREE.GridHelper(1.5, 5, 0xffffff, 0x444444);
             gridHelper.position.y = 0.21;
             pedestalGroup.add(gridHelper);
 
             scene.add(pedestalGroup);
         }
 
-        // יצירת גוף האדם וידיים מדויקות שיוכלו לזוז ולהרביץ
-        function createHumanWireframe() {
-            humanGroup = new THREE.Group();
+        // יצירת בוב ספוג במבנה Wireframe מפורט
+        function createWireframeSpongeBob() {
+            snoopGroup = new THREE.Group();
             parts = [];
 
             const material = new THREE.MeshBasicMaterial({
@@ -210,62 +215,62 @@
                     origRot: new THREE.Euler(rx, ry, rz), 
                     vel: new THREE.Vector3() 
                 };
-                humanGroup.add(mesh);
+                snoopGroup.add(mesh);
                 parts.push(mesh);
                 return mesh;
             }
 
-            // ראש
-            const headGeo = new THREE.SphereGeometry(0.28, 8, 8);
-            headGeo.scale(0.8, 1.1, 0.9);
-            addPart(headGeo, 0, 1.7, 0);
+            // גוף מלבני (הספוג עצמו)
+            const bodyGeo = new THREE.BoxGeometry(1.0, 1.1, 0.6);
+            addPart(bodyGeo, 0, 0.6, 0);
 
-            // צוואר
-            const neckGeo = new THREE.CylinderGeometry(0.1, 0.12, 0.25, 6);
-            addPart(neckGeo, 0, 1.35, 0);
+            // מכנסיים מרובעים
+            const pantsGeo = new THREE.BoxGeometry(1.0, 0.35, 0.6);
+            addPart(pantsGeo, 0, -0.05, 0);
 
-            // חזה
-            const torsoGeo = new THREE.ConeGeometry(0.4, 0.8, 8);
-            torsoGeo.scale(1, 1, 0.6);
-            addPart(torsoGeo, 0, 0.85, 0);
+            // רגליים
+            const legGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.5, 6);
+            addPart(legGeo, -0.25, -0.4, 0);
+            addPart(legGeo, 0.25, -0.4, 0);
 
-            // רגל עומדת
-            const leg1Geo = new THREE.CylinderGeometry(0.1, 0.07, 1.3, 6);
-            addPart(leg1Geo, -0.15, -0.5, 0);
+            // נעליים
+            const shoeGeo = new THREE.BoxGeometry(0.2, 0.15, 0.3);
+            addPart(shoeGeo, -0.25, -0.68, 0.05);
+            addPart(shoeGeo, 0.25, -0.68, 0.05);
 
-            // רגל מקופלת
-            const thighGeo = new THREE.CylinderGeometry(0.11, 0.09, 0.65, 6);
-            addPart(thighGeo, 0.15, -0.25, 0.15, Math.PI / 3, 0, 0);
-
-            const shinGeo = new THREE.CylinderGeometry(0.09, 0.06, 0.65, 6);
-            addPart(shinGeo, 0.15, -0.65, 0.4, -Math.PI / 4, 0, 0);
-
-            // ידיים נפרדות לשליטה באגרוף
-            const armGeo = new THREE.CylinderGeometry(0.08, 0.06, 0.85, 6);
-            
-            // יד ימין
-            rightArm = new THREE.Mesh(armGeo, material);
-            rightArm.position.set(-0.38, 0.9, 0.1);
-            rightArm.rotation.set(0, 0, Math.PI / 8);
-            rightArm.userData = { origPos: rightArm.position.clone(), origRot: rightArm.rotation.clone(), vel: new THREE.Vector3() };
-            humanGroup.add(rightArm);
-            parts.push(rightArm);
-
-            // יד שמאל (שנותנת את האגרוף)
-            leftArm = new THREE.Mesh(armGeo, material);
-            leftArm.position.set(0.38, 0.85, 0.2);
-            leftArm.rotation.set(-Math.PI / 6, 0, -Math.PI / 8);
-            leftArm.userData = { origPos: leftArm.position.clone(), origRot: leftArm.rotation.clone(), vel: new THREE.Vector3() };
-            humanGroup.add(leftArm);
-            parts.push(leftArm);
-
-            humanGroup.position.y = -0.3;
-            scene.add(humanGroup);
+            snoopGroup.position.y = -0.3;
+            scene.add(snoopGroup);
         }
 
-        // פעולת אגרוף אמיתית - היד נשלחת קדימה במהירות וחוזרת
-        function punchCharacter() {
-            actionState = 'punch';
+        // יצירת כפפות אגרוף תלת-ממדיות שנשלטות על ידי העכבר שלך
+        function createInteractiveFists() {
+            const fistMat = new THREE.MeshBasicMaterial({
+                color: 0xffffff,
+                wireframe: true
+            });
+
+            const fistGeo = new THREE.SphereGeometry(0.25, 8, 8);
+            
+            leftFist = new THREE.Mesh(fistGeo, fistMat);
+            leftFist.position.set(-1.2, 0, 2);
+            scene.add(leftFist);
+
+            rightFist = new THREE.Mesh(fistGeo, fistMat);
+            rightFist.position.set(1.2, 0, 2);
+            scene.add(rightFist);
+        }
+
+        // מעקב אחר תנועות העכבר כדי לשלוט בידיים
+        function onMouseMove(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            // מיפוי מיקום העכבר למרחב התלת-ממד של הידיים
+            targetFistPos.set(mouse.x * 2.5, mouse.y * 2.0 + 0.5, 1.5);
+        }
+
+        function powerPunch() {
+            actionState = 'powerPunch';
             actionTimer = 0;
         }
 
@@ -274,14 +279,14 @@
             actionTimer = 0;
         }
 
-        function glitchCharacter() {
-            actionState = 'glitch';
+        function explodeCharacter() {
+            actionState = 'explode';
             actionTimer = 0;
             parts.forEach(p => {
                 p.userData.vel.set(
-                    (Math.random() - 0.5) * 0.25,
-                    Math.random() * 0.2 + 0.05,
-                    (Math.random() - 0.5) * 0.25
+                    (Math.random() - 0.5) * 0.3,
+                    Math.random() * 0.25 + 0.1,
+                    (Math.random() - 0.5) * 0.3
                 );
             });
         }
@@ -289,8 +294,8 @@
         function resetCharacter() {
             actionState = 'normal';
             actionTimer = 0;
-            humanGroup.rotation.set(0, 0, 0);
-            humanGroup.position.set(0, -0.3, 0);
+            snoopGroup.rotation.set(0, 0, 0);
+            snoopGroup.position.set(0, -0.3, 0);
             parts.forEach(p => {
                 p.position.copy(p.userData.origPos);
                 p.rotation.copy(p.userData.origRot);
@@ -308,26 +313,35 @@
             requestAnimationFrame(animate);
             actionTimer += 0.05;
 
+            // תנועת הידיים בעקבות העכבר שלך עם ריכוך חלק (Lerp)
+            if (leftFist && rightFist) {
+                leftFist.position.lerp(new THREE.Vector3(targetFistPos.x - 0.5, targetFistPos.y, targetFistPos.z), 0.15);
+                rightFist.position.lerp(new THREE.Vector3(targetFistPos.x + 0.5, targetFistPos.y, targetFistPos.z), 0.15);
+                
+                // סיבוב קל של האגרופים להמחשה
+                leftFist.rotation.y += 0.03;
+                rightFist.rotation.y -= 0.03;
+            }
+
             if (actionState === 'normal') {
-                humanGroup.rotation.y += 0.008;
-                humanGroup.position.y = -0.3 + Math.sin(Date.now() * 0.003) * 0.03;
+                snoopGroup.rotation.y += 0.01;
+                snoopGroup.position.y = -0.3 + Math.sin(Date.now() * 0.004) * 0.04;
             } 
-            else if (actionState === 'punch') {
-                // אגרוף קדימה עם יד שמאל ורטט בכל הגוף
-                humanGroup.rotation.z = Math.sin(actionTimer * 35) * 0.12;
-                leftArm.rotation.x = -Math.PI / 2 + Math.sin(actionTimer * 40) * 0.5;
-                leftArm.position.z = 0.2 + Math.sin(actionTimer * 40) * 0.4;
+            else if (actionState === 'powerPunch') {
+                // רעידה חזקה לבוב ספוג כאילו חוטף מכות מהידיים
+                snoopGroup.rotation.z = Math.sin(actionTimer * 40) * 0.2;
+                snoopGroup.position.x = Math.sin(actionTimer * 50) * 0.1;
                 if (actionTimer > 1.8) resetCharacter();
             } 
             else if (actionState === 'spin') {
-                humanGroup.rotation.y += 0.3;
+                snoopGroup.rotation.y += 0.35;
                 if (actionTimer > 3) resetCharacter();
             } 
-            else if (actionState === 'glitch') {
+            else if (actionState === 'explode') {
                 parts.forEach(p => {
                     p.position.add(p.userData.vel);
-                    p.rotation.x += 0.1;
-                    p.rotation.y += 0.1;
+                    p.rotation.x += 0.12;
+                    p.rotation.y += 0.12;
                 });
             }
 
