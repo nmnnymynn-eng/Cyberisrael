@@ -1,38 +1,47 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מגן ישראל בסייבר - פורטל הגנה לאומי</title>
+    <title>Israel Cyber Defense - National Cyber Portal</title>
+    <!-- ייבוא פונט כבד ומרשים בסגנון מודרני -->
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --card-bg: rgba(15, 23, 42, 0.85);
+            --card-bg: rgba(10, 15, 30, 0.75);
             --accent-blue: #38bdf8;
             --accent-red: #ef4444;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --border-color: rgba(56, 189, 248, 0.2);
+            --border-color: rgba(56, 189, 248, 0.25);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         body {
-            background-color: #030712;
+            background-color: #020617;
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
             position: relative;
+            font-family: 'Inter', sans-serif;
         }
 
-        /* קנבס לרקע הרשת הזיזה */
-        #bg-canvas {
+        /* הגדרת הפונט העבה לכותרות */
+        h1, h2, h3, .logo-text h1, .hero h2 {
+            font-family: 'Anton', sans-serif;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* קנבס לרקע גלי התלת-ממד הזז על פני כל האתר */
+        #wave-canvas {
             position: fixed;
             top: 0;
             left: 0;
@@ -48,8 +57,8 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 40px;
-            background: rgba(9, 13, 22, 0.85);
-            backdrop-filter: blur(10px);
+            background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-color);
             position: relative;
             z-index: 10;
@@ -67,58 +76,65 @@
             border-radius: 50%;
             border: 2px solid var(--accent-blue);
             object-fit: cover;
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+            background-color: #ffffff;
         }
 
         .logo-text h1 {
-            font-size: 1.25rem;
-            font-weight: bold;
+            font-size: 1.4rem;
             color: #ffffff;
         }
 
         .logo-text p {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         nav {
             display: flex;
-            gap: 25px;
+            gap: 30px;
         }
 
         nav a {
             color: var(--text-muted);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 0.95rem;
             transition: color 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         nav a:hover {
             color: var(--accent-blue);
         }
 
-        /* Main Hero */
+        /* Hero Section */
         .hero {
             text-align: center;
-            padding: 70px 20px;
+            padding: 80px 20px 50px 20px;
             position: relative;
             z-index: 2;
         }
 
         .hero h2 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            margin-bottom: 15px;
-            background: linear-gradient(90deg, #ffffff, #38bdf8);
+            font-size: 3.5rem;
+            font-weight: normal;
+            margin-bottom: 20px;
+            background: linear-gradient(180deg, #ffffff, #38bdf8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
 
         .hero p {
             font-size: 1.15rem;
             color: var(--text-muted);
-            max-width: 700px;
-            margin: 0 auto 30px auto;
+            max-width: 750px;
+            margin: 0 auto 35px auto;
             line-height: 1.6;
         }
 
@@ -126,27 +142,30 @@
             background-color: var(--accent-red);
             color: white;
             border: none;
-            padding: 14px 30px;
-            font-size: 1rem;
-            font-weight: bold;
+            padding: 16px 36px;
+            font-size: 1.05rem;
+            font-weight: 800;
             border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
-            transition: opacity 0.2s;
+            box-shadow: 0 0 25px rgba(239, 68, 68, 0.5);
+            transition: transform 0.2s, opacity 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .emergency-btn:hover {
-            opacity: 0.9;
+            opacity: 0.95;
+            transform: scale(1.03);
         }
 
         /* Content Grid */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px 20px 60px 20px;
+            padding: 20px 20px 70px 20px;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
+            gap: 30px;
             flex: 1;
             position: relative;
             z-index: 2;
@@ -154,20 +173,26 @@
 
         .card {
             background-color: var(--card-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-radius: 14px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            transition: border-color 0.3s;
+        }
+
+        .card:hover {
+            border-color: rgba(56, 189, 248, 0.5);
         }
 
         .card h3 {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             margin-bottom: 15px;
             color: var(--accent-blue);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            font-weight: normal;
         }
 
         .card p, .card ul {
@@ -178,7 +203,7 @@
 
         .card ul {
             list-style-position: inside;
-            margin-top: 10px;
+            margin-top: 12px;
         }
 
         .card ul li {
@@ -188,150 +213,158 @@
         /* Footer */
         footer {
             text-align: center;
-            padding: 25px;
-            background: rgba(9, 13, 22, 0.85);
-            backdrop-filter: blur(10px);
+            padding: 30px;
+            background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(12px);
             border-top: 1px solid var(--border-color);
             color: var(--text-muted);
             font-size: 0.85rem;
             position: relative;
             z-index: 10;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
 
-    <!-- קנבס לרקע הרשת הזזה -->
-    <canvas id="bg-canvas"></canvas>
+    <!-- קנבס לרקע גלי רשת הסייבר התלת-ממדיים -->
+    <canvas id="wave-canvas"></canvas>
 
     <!-- Header -->
     <header>
         <div class="logo-container">
-            <!-- הלוגו שסיפקת -->
-            <img src="image_3fa975.jpg" alt="לוגו הגנה בסייבר" class="logo-img">
+            <img src="image_3fa975.jpg" alt="Israel Cyber Logo" class="logo-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22><circle cx=%2225%22 cy=%2225%22 r=%2223%22 fill=%22%230ea5e9%22/><text x=%2225%22 y=%2231%22 fill=%22white%22 font-size=%2214%22 font-family=%22sans-serif%22 text-anchor=%22middle%22>IL</text></svg>'">
             <div class="logo-text">
-                <h1>הגנת הסייבר הלאומית</h1>
-                <p>מגנים על מרחב הרשת של ישראל</p>
+                <h1>National Cyber Shield</h1>
+                <p>Protecting Israel's Digital Space</p>
             </div>
         </div>
         <nav>
-            <a href="#alerts">התרעות אבטחה</a>
-            <a href="#guidelines">הנחיות לציבור</a>
-            <a href="#report">דיווח על אירוע</a>
+            <a href="#alerts">Security Alerts</a>
+            <a href="#guidelines">Public Guidelines</a>
+            <a href="#report">Emergency Report</a>
         </nav>
     </header>
 
     <!-- Hero Section -->
     <section class="hero">
-        <h2>חזית ההגנה הדיגיטלית של ישראל</h2>
-        <p>פורטל החירום וההנחיות הלאומי לאבטחת מידע, התמודדות עם מתקפות רשת ושמירה על ביטחונם הדיגיטלי של אזרחי ישראל מסביב שעון.</p>
-        <button class="emergency-btn" onclick="alert('לדיווח דחוף על אירוע סייבר או פריצה, פנה למוקד הלאומי 119')">🚨 דיווח על אירוע חירום (119)</button>
+        <h2>The Digital Frontline of Israel</h2>
+        <p>National emergency and protection portal dedicated to cyber security defense, threat mitigation, and safeguarding citizens and critical infrastructure 24/7.</p>
+        <button class="emergency-btn" onclick="alert('For immediate cyber incident reporting, contact the National Emergency Cyber Hotline: 119')">🚨 Emergency Cyber Report (119)</button>
     </section>
 
     <!-- Main Grid -->
     <div class="container" id="guidelines">
         <div class="card">
-            <h3>🛡️ הנחיות אבטחה ליחידים</h3>
-            <p>צעדים בסיסיים שיש לנקוט כדי להגן על החשבונות והמידע האישי שלך ברשת:</p>
+            <h3>🛡️ Individual Security Guidelines</h3>
+            <p>Essential steps to secure your personal accounts and digital assets against modern cyber threats:</p>
             <ul>
-                <li>הפעלת אימות דו-שלבי (2FA) בכל החשבונות החשובים.</li>
-                <li>הימנעות מפתיחת קישורים חשודים או הודעות ממתחזים (פישינג).</li>
-                <li>שימוש בסיסמאות חזקות ושונות לכל שירות.</li>
-                <li>עדכון תדיר של מערכות ההפעלה והאפליקציות.</li>
+                <li>Enable Two-Factor Authentication (2FA) across all critical accounts.</li>
+                <li>Avoid clicking suspicious links, unknown attachments, or phishing messages.</li>
+                <li>Use strong, unique passwords for every online service and platform.</li>
+                <li>Keep operating systems and security software updated regularly.</li>
             </ul>
         </div>
 
         <div class="card" id="alerts">
-            <h3>⚠️ עדכוני אבטחה והתרעות</h3>
-            <p><strong>מצב כוננות עליון במרחב הציבורי:</strong> זוהו ניסיונות חוזרים לפגיעה בתשתיות קריטיות ובפרופילים פרטיים באמצעות הנדסה חברתית והפצת לינקים זדוניים.</p>
+            <h3>⚠️ Security Alerts & Status</h3>
+            <p><strong>High Alert Status:</strong> Multiple malicious campaigns targeting public infrastructure and user accounts through advanced social engineering have been detected and neutralized.</p>
             <br>
-            <p>מומלץ לגלות ערנות מוגברת, לא לאשר בקשות חברות או הודעות מגורמים לא מוכרים.</p>
+            <p>We advise maintaining extreme vigilance, declining requests from unverified sources, and never sharing authentication codes.</p>
         </div>
 
         <div class="card" id="report">
-            <h3>📢 מרכז דיווח וסיוע</h3>
-            <p>זיהית פעילות חשודה, ניסיון פריצה לחשבון, או מתקפת רשת? אנחנו כאן כדי לטפל בכך.</p>
+            <h3>📢 Incident Response Center</h3>
+            <p>Have you encountered suspicious cyber activity, account takeover attempts, or network intrusions? Our emergency response team is ready to assist.</p>
             <br>
-            <p>ניתן ליצור קשר ישיר עם מרכז השליטה הלאומי בחירום דרך קו הסיוע הארצי בטלפון <strong>119</strong>.</p>
+            <p>Contact the National Cyber Operations Center directly via emergency hotline <strong>119</strong> or through authorized channels.</p>
         </div>
     </div>
 
     <!-- Footer -->
     <footer>
-        <p>כל הזכויות שמורות לפורטל ההגנה הלאומי בסייבר © 2026</p>
+        <p>All Rights Reserved © 2026 National Cyber Defense Portal - Israel</p>
     </footer>
 
-    <!-- סקריפט המייצר את רקע הרשת הזזה (בדיוק כמו בסגנון ששלחת) -->
+    <!-- סקריפט אנימציית גלי רשת תלת-ממדיים ברקע -->
     <script>
-        const canvas = document.getElementById('bg-canvas');
+        const canvas = document.getElementById('wave-canvas');
         const ctx = canvas.getContext('2d');
 
-        let particles = [];
-        const numParticles = 45; // כמות הנקודות ברשת
-        const maxDistance = 140; // מרחק חיבור הקווים
+        let width, height;
+        let cols, rows;
+        const spacing = 40;
+        let points = [];
+        let angle = 0;
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            cols = Math.floor(width / spacing) + 2;
+            rows = Math.floor(height / spacing) + 2;
         }
 
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+        window.addEventListener('resize', resize);
+        resize();
 
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 0.8; // מהירות תנועה אופקית
-                this.vy = (Math.random() - 0.5) * 0.8; // מהירות תנועה אנכית
-                this.radius = 2 + Math.random() * 2;
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-
-                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-            }
-
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-                ctx.fill();
+        function initGrid() {
+            points = [];
+            for (let i = 0; i < cols; i++) {
+                points[i] = [];
+                for (let j = 0; j < rows; j++) {
+                    points[i][j] = {
+                        x: (i - 1) * spacing,
+                        y: (j - 1) * spacing,
+                        baseZ: Math.random() * 20
+                    };
+                }
             }
         }
 
-        function initParticles() {
-            particles = [];
-            for (let i = 0; i < numParticles; i++) {
-                particles.push(new Particle());
-            }
-        }
+        initGrid();
 
         function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, width, height);
 
-            // עדכון וציור הנקודות והקווים ביניהן
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
+            angle += 0.025;
 
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
+            for (let i = 0; i < cols; i++) {
+                for (let j = 0; j < rows; j++) {
+                    const p = points[i][j];
+                    p.currentZ = Math.sin(i * 0.4 + angle) * 18 + Math.cos(j * 0.4 + angle) * 18;
+                }
+            }
 
-                    if (distance < maxDistance) {
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.18)';
+            ctx.lineWidth = 1;
+
+            for (let i = 0; i < cols; i++) {
+                for (let j = 0; j < rows; j++) {
+                    const p = points[i][j];
+                    const depthFactor = (p.currentZ + 30) / 60;
+                    
+                    if (i < cols - 1) {
+                        const rightP = points[i + 1][j];
                         ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        // שקיפות הקו משתנה לפי המרחק
-                        const alpha = (1 - (distance / maxDistance)) * 0.4;
-                        ctx.strokeStyle = `rgba(56, 189, 248, ${alpha})`;
-                        ctx.lineWidth = 1;
+                        ctx.moveTo(p.x, p.y + p.currentZ);
+                        ctx.lineTo(rightP.x, rightP.y + rightP.currentZ);
                         ctx.stroke();
+                    }
+
+                    if (j < rows - 1) {
+                        const downP = points[i][j + 1];
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y + p.currentZ);
+                        ctx.lineTo(downP.x, downP.y + downP.currentZ);
+                        ctx.stroke();
+                    }
+
+                    if (i % 2 === 0 && j % 2 === 0) {
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y + p.currentZ, 1.8 * Math.max(0.6, depthFactor), 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(255, 255, 255, ${0.4 + depthFactor * 0.3})`;
+                        ctx.fill();
                     }
                 }
             }
@@ -339,7 +372,6 @@
             requestAnimationFrame(animate);
         }
 
-        initParticles();
         animate();
     </script>
 </body>
