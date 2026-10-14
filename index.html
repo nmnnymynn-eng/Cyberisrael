@@ -70,7 +70,8 @@
             height: 50px;
             border-radius: 50%;
             border: 2px solid var(--accent-blue);
-            object-fit: cover;
+            object-fit: contain;
+            padding: 4px;
             box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
             background-color: #ffffff;
         }
@@ -195,8 +196,8 @@
 
     <header>
         <div class="logo-container">
-            <!-- ודא שקובץ התמונה שלך נמצא באותה תיקיה ונקרא logo.jpg -->
-            <img src="logo.jpg" alt="Israel Cyber Logo" class="logo-img">
+            <!-- הלוגו המעודכן ששלחת -->
+            <img src="logo.png" alt="Israel Cyber Logo" class="logo-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22><circle cx=%2225%22 cy=%2225%22 r=%2223%22 fill=%22%230ea5e9%22/><text x=%2225%22 y=%2231%22 fill=%22white%22 font-size=%2214%22 text-anchor=%22middle%22>IL</text></svg>'">
             <div class="logo-text">
                 <h1>National Cyber Shield</h1>
                 <p>Protecting Israel's Digital Space</p>
