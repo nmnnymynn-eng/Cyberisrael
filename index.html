@@ -2,7 +2,8 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">wireframe human sculpture - github pages</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wireframe Sphere & Figure - GitHub Pages</title>
     <style>
         body {
             margin: 0;
@@ -33,20 +34,20 @@
     <div id="canvas-container"></div>
     <div class="watermark">PI-SLICES</div>
 
-    <!-- טעינת Three.js וספריות נלוות -->
+    <!-- טעינת Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        let scene, camera, renderer, sculptureGroup;
+        let scene, camera, renderer, worldGroup, sphere, figureGroup;
 
         function init() {
             // יצירת סצנה
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x000000);
 
-            // יצירת מצלמה
-            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 2, 7);
-            camera.lookAt(0, 0, 0);
+            // יצירת מצלמה בזווית אלכסונית מלמעלה בדיוק כמו בתמונה
+            camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 3, 9);
+            camera.lookAt(0, -0.5, 0);
 
             // יצירת רנדרר
             renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -54,114 +55,104 @@
             renderer.setPixelRatio(window.devicePixelRatio);
             document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-            // קבוצת הפסל (דמות + בסיס)
-            sculptureGroup = new THREE.Group();
-            scene.add(sculptureGroup);
+            // קבוצה ראשית שזזה יחד (כדי ליצור אשליה של התקדמות)
+            worldGroup = new THREE.Group();
+            scene.add(worldGroup);
 
-            // בניית הבסיס המשובץ
-            createPedestal();
+            // יצירת הרשת התחתונה (Grid) שנמתחת לאופק כמו בתמונה
+            createPerspectiveGrid();
 
-            // בניית דמות אדם מדויקת מרשת משולשים
-            createHumanWireframeSculpture();
+            // יצירת כדור המשולשים הגדול
+            createTriangulatedSphere();
 
-            // התאמה לשינויי גודל במסך
+            // יצירת דמות האדם שעומדת על הכדור
+            createFigureOnSphere();
+
+            // האזנה לשינויי גודל המסך
             window.addEventListener('resize', onWindowResize);
 
-            // הרצת הלולאה הראשית
+            // הרצת לולאת האנימציה
             animate();
         }
 
-        // יצירת הבסיס הריבועי המשובץ בדיוק כמו בתמונה
-        function createPedestal() {
-            const pedestalGroup = new THREE.Group();
-            pedestalGroup.position.y = -1.5;
-
-            // קוביית הבסיס השחורה
-            const boxGeo = new THREE.BoxGeometry(1.2, 0.4, 1.2);
-            const boxMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
-            const box = new THREE.Mesh(boxGeo, boxMat);
-            pedestalGroup.add(box);
-
-            // קווים לבנים יוצרים משבצות על הבסיס
-            const edgesGeo = new THREE.EdgesGeometry(boxGeo);
-            const wireMat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 1 });
-            const wireBox = new THREE.LineSegments(edgesGeo, wireMat);
-            pedestalGroup.add(wireBox);
-
-            // חלוקה פנימית למשבצות על גבי המשטח העליון
-            const gridHelper = new THREE.GridHelper(1.2, 3, 0xffffff, 0xffffff);
-            gridHelper.position.y = 0.21;
-            pedestalGroup.add(gridHelper);
-
-            sculptureGroup.add(pedestalGroup);
+        // יצירת רשת הקרקע הפרספקטיבית
+        function createPerspectiveGrid() {
+            const gridHelper = new THREE.GridHelper(30, 20, 0xffffff, 0xffffff);
+            gridHelper.position.y = -2.2;
+            gridHelper.position.z = -5;
+            // הטיית הרשת קצת קדימה ליצירת עומק
+            gridHelper.rotation.x = 0.1;
+            worldGroup.add(gridHelper);
         }
 
-        // יצירת מבנה גוף האדם מרשת משולשים (Wireframe)
-        function createHumanWireframeSculpture() {
-            const material = new THREE.MeshBasicMaterial({
+        // יצירת הכדור הענק העשוי רשת משולשים
+        function createTriangulatedSphere() {
+            // שימוש ב-IcosahedronGeometry כדי לקבל בדיוק מבנה של משולשים על הכדור כמו בתמונה
+            const sphereGeo = new THREE.IcosahedronGeometry(2.0, 3);
+            
+            const wireMat = new THREE.MeshBasicMaterial({
                 color: 0xffffff,
                 wireframe: true,
                 transparent: true,
-                opacity: 0.9
+                opacity: 0.85
+            });
+
+            sphere = new THREE.Mesh(sphereGeo, wireMat);
+            sphere.position.set(0, -0.2, 0);
+            worldGroup.add(sphere);
+        }
+
+        // יצירת הדמות בדיוק במצב עמידה על ראש הכדור
+        function createFigureOnSphere() {
+            figureGroup = new THREE.Group();
+
+            const mat = new THREE.MeshBasicMaterial({
+                color: 0xffffff,
+                wireframe: true
             });
 
             // ראש
-            const headGeo = new THREE.SphereGeometry(0.3, 7, 7);
-            headGeo.scale(0.8, 1.1, 0.9);
-            const head = new THREE.Mesh(headGeo, material);
-            head.position.set(0, 1.8, 0);
-            sculptureGroup.add(head);
+            const head = new THREE.Mesh(new THREE.SphereGeometry(0.15, 6, 6), mat);
+            head.position.set(0, 1.85, 0);
+            figureGroup.add(head);
 
-            // צוואר
-            const neckGeo = new THREE.CylinderGeometry(0.12, 0.15, 0.3, 6);
-            const neck = new THREE.Mesh(neckGeo, material);
-            neck.position.set(0, 1.35, 0);
-            sculptureGroup.add(neck);
+            // פלג גוף עליון
+            const torso = new THREE.Mesh(new THREE.ConeGeometry(0.25, 0.5, 6), mat);
+            torso.position.set(0, 1.5, 0);
+            figureGroup.add(torso);
 
-            // פלג גוף עליון (חזה וכתפיים)
-            const torsoGeo = new THREE.ConeGeometry(0.45, 0.9, 8);
-            torsoGeo.scale(1, 1, 0.6);
-            const torso = new THREE.Mesh(torsoGeo, material);
-            torso.position.set(0, 0.8, 0);
-            sculptureGroup.add(torso);
+            // רגל עומדת (ישרה על הכדור)
+            const leg1 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.04, 0.7, 5), mat);
+            leg1.position.set(0, 1.05, 0);
+            figureGroup.add(leg1);
 
-            // רגל עומדת (ישרה למטה אל הבסיס)
-            const standingLegGeo = new THREE.CylinderGeometry(0.12, 0.08, 1.4, 6);
-            const standingLeg = new THREE.Mesh(standingLegGeo, material);
-            standingLeg.position.set(-0.15, -0.6, 0);
-            sculptureGroup.add(standingLeg);
+            // רגל מקופלת באוויר
+            const thigh2 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.05, 0.35, 5), mat);
+            thigh2.position.set(0.12, 1.25, 0.15);
+            thigh2.rotation.x = Math.PI / 3;
+            figureGroup.add(thigh2);
 
-            // רגל מקופלת (כמו בתמונה)
-            const thighGeo = new THREE.CylinderGeometry(0.13, 0.1, 0.7, 6);
-            const thigh = new THREE.Mesh(thighGeo, material);
-            thigh.position.set(0.15, -0.3, 0.2);
-            thigh.rotation.x = Math.PI / 3;
-            sculptureGroup.add(thigh);
-
-            const shinGeo = new THREE.CylinderGeometry(0.1, 0.07, 0.7, 6);
-            const shin = new THREE.Mesh(shinGeo, material);
-            shin.position.set(0.15, -0.7, 0.45);
-            shin.rotation.x = -Math.PI / 4;
-            sculptureGroup.add(shin);
+            const shin2 = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.03, 0.35, 5), mat);
+            shin2.position.set(0.12, 1.0, 0.35);
+            shin2.rotation.x = -Math.PI / 4;
+            figureGroup.add(shin2);
 
             // ידיים
-            const armGeo = new THREE.CylinderGeometry(0.09, 0.07, 0.9, 6);
+            const arm1 = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.03, 0.45, 5), mat);
+            arm1.position.set(-0.2, 1.55, 0);
+            arm1.rotation.z = Math.PI / 6;
+            figureGroup.add(arm1);
+
+            const arm2 = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.03, 0.45, 5), mat);
+            arm2.position.set(0.2, 1.5, 0.1);
+            arm2.rotation.x = -Math.PI / 4;
+            figureGroup.add(arm2);
+
+            // מיקום מדויק של הדמות כך שתעמוד בדיוק בחלקו העליון של הכדור
+            figureGroup.position.set(0, 1.7, 0);
             
-            // יד ימין (יורדת לצד הגוף)
-            const rightArm = new THREE.Mesh(armGeo, material);
-            rightArm.position.set(-0.4, 0.9, 0.1);
-            rightArm.rotation.z = Math.PI / 8;
-            sculptureGroup.add(rightArm);
-
-            // יד שמאל (מושטת קדימה מעט)
-            const leftArm = new THREE.Mesh(armGeo, material);
-            leftArm.position.set(0.4, 0.85, 0.2);
-            leftArm.rotation.x = -Math.PI / 6;
-            leftArm.rotation.z = -Math.PI / 8;
-            sculptureGroup.add(leftArm);
-
-      // התאמת מיקום כללי של הפסל מעל הבסיס
-      sculptureGroup.position.y = -0.3;
+            // הוספת הדמות לכדור כך שהיא תסתובב יחד איתו
+            sphere.add(figureGroup);
         }
 
         function onWindowResize() {
@@ -170,15 +161,16 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         }
 
-        // אנימציית סיבוב איטי ותנועה עדינה של הדמות בדיוק כמו בגיפ המקורי
+        // אנימציית גלגול הכדור וסיבוב הסצנה בדיוק כמו בגיפ
         function animate() {
             requestAnimationFrame(animate);
 
-            // סיבוב איטי סביב הציר כדי שיראו את כל התלת-ממד
-            sculptureGroup.rotation.y += 0.008;
+            // גלגול הכדור סביב ציר Z ו-X כך שייראה שהוא מתגלגל קדימה ושמאלה
+            sphere.rotation.z -= 0.015;
+            sphere.rotation.x += 0.005;
 
-            // תנועת נדנוד קטנה ועדינה (ריחוף/נשימה) כמו בגיפ
-            sculptureGroup.position.y = -0.3 + Math.sin(Date.now() * 0.003) * 0.03;
+            // סיבוב קל של כל העולם לצדדים כדי לתת תחושת תנועה מרחבית
+            worldGroup.rotation.y = Math.sin(Date.now() * 0.001) * 0.2;
 
             renderer.render(scene, camera);
         }
@@ -187,3 +179,4 @@
     </script>
 </body>
 </html>
+```[cite: 4]
