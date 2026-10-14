@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Wireframe Human - GitHub Pages</title>
+    <title>Wireframe Human City - GitHub Pages</title>
     <style>
         body {
             margin: 0;
             padding: 0;
             overflow: hidden;
-            background-color: #000000;
-            font-family: monospace;
+            background-color: #030303;
+            font-family: 'Courier New', Courier, monospace;
             user-select: none;
         }
         #canvas-container {
@@ -20,15 +20,30 @@
         }
         .watermark {
             position: absolute;
-            bottom: 20px;
-            right: 25px;
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 14px;
-            letter-spacing: 2px;
+            bottom: 25px;
+            right: 30px;
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 13px;
+            letter-spacing: 3px;
             pointer-events: none;
             text-transform: uppercase;
         }
-        /* לוח כפתורי שליטה אינטראקטיביים */
+        .instructions {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            letter-spacing: 2px;
+            pointer-events: none;
+            text-transform: uppercase;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
         .controls {
             position: absolute;
             bottom: 30px;
@@ -36,113 +51,126 @@
             transform: translateX(-50%);
             display: flex;
             gap: 12px;
-            background: rgba(20, 20, 20, 0.85);
-            padding: 12px 20px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
+            background: rgba(10, 10, 10, 0.9);
+            padding: 14px 24px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
             z-index: 10;
         }
         button {
-            background: #111;
-            color: #fff;
+            background: #0a0a0a;
+            color: #ffffff;
             border: 1px solid rgba(255, 255, 255, 0.4);
             padding: 10px 18px;
-            border-radius: 8px;
+            border-radius: 4px;
             cursor: pointer;
-            font-family: monospace;
-            font-size: 14px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
         button:hover {
-            background: #fff;
-            color: #000;
-            border-color: #fff;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(255,255,255,0.2);
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
         }
         button:active {
-            transform: translateY(0);
-        }
-        .instructions {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 13px;
-            letter-spacing: 1px;
-            pointer-events: none;
-            text-align: center;
+            transform: scale(0.96);
         }
     </style>
 </head>
 <body>
 
-    <div class="instructions">גרור עם העכבר כדי לסובב את הדמות • השתמש בכפתורים למטה כדי להפעיל עליה פעולות</div>
+    <div class="instructions">Drag to rotate view • Use buttons below to interact</div>
     <div id="canvas-container"></div>
     <div class="watermark">PI-SLICES</div>
 
-    <!-- לוח הבקרה עם הכפתורים -->
     <div class="controls">
-        <button onclick="punchCharacter()">💥 תן אגרוף</button>
-        <button onclick="spinCharacter()">🔄 סובב מהר</button>
-        <button onclick="glitchCharacter()">⚡ פיצוץ / התפרקות</button>
-        <button onclick="resetCharacter()">✨ שחזר דמות</button>
+        <button onclick="punchCharacter()">Punch</button>
+        <button onclick="spinCharacter()">Spin Fast</button>
+        <button onclick="glitchCharacter()">Explode</button>
+        <button onclick="resetCharacter()">Reset</button>
     </div>
 
-    <!-- טעינת Three.js וספרית עזר לשליטה בעכבר (OrbitControls) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     
     <script>
         let scene, camera, renderer, controls;
         let humanGroup, parts = [];
-        let isAnimating = true;
         let actionState = 'normal';
         let actionTimer = 0;
 
         function init() {
-            // יצירת סצנה
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x000000);
+            scene.background = new THREE.Color(0x020202);
+            scene.fog = new THREE.FogExp2(0x020202, 0.04);
 
-            // יצירת מצלמה
             camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 1.5, 6);
+            camera.position.set(0, 2, 7);
 
-            // יצירת רנדרר
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(window.devicePixelRatio);
             document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-            // הוספת יכולת סיבוב עם העכבר
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
+            controls.maxPolarAngle = Math.PI / 2 - 0.05; // מניעה מהמצלמה לרדת מתחת לרצפה
 
-            // יצירת הבסיס
+            createGridFloor();
+            createSquareCity();
             createPedestal();
-
-            // יצירת הדמות המדויקת מרשת משולשים
             createHumanWireframe();
 
-            // האזנה לשינויי חלון
             window.addEventListener('resize', onWindowResize);
-
-            // לולאת אנימציה ראשית
             animate();
         }
 
-        // בניית הבסיס המשובץ כמו בתמונה
+        // רצפת רשת פרספקטיבית ריאליסטית
+        function createGridFloor() {
+            const grid = new THREE.GridHelper(60, 60, 0x444444, 0x151515);
+            grid.position.y = -1.5;
+            scene.add(grid);
+        }
+
+        // בניית עיר מרובעת של בנייני רשת (Wireframe Skyscrapers) סביב הדמות
+        function createSquareCity() {
+            const cityGroup = new THREE.Group();
+            const buildingGeo = new THREE.BoxGeometry(1.5, 1, 1.5);
+            const buildingMat = new THREE.MeshBasicMaterial({
+                color: 0x333333,
+                wireframe: true
+            });
+
+            const positions = [
+                [-4, 0, -4], [4, 0, -4], [-4, 0, 4], [4, 0, 4],
+                [-7, 0, 0], [7, 0, 0], [0, 0, -7], [0, 0, 7],
+                [-6, 0, -6], [6, 0, 6], [-6, 0, 6], [6, 0, -6]
+            ];
+
+            positions.forEach(pos => {
+                const height = Math.random() * 4 + 3;
+                const building = new THREE.Mesh(buildingGeo, buildingMat);
+                building.scale.set(1, height, 1);
+                building.position.set(pos[0], -1.5 + height / 2, pos[2]);
+                cityGroup.add(building);
+            });
+
+            scene.add(cityGroup);
+        }
+
+        // בניית הבסיס המרכזי שעליו עומדת הדמות
         function createPedestal() {
             const pedestalGroup = new THREE.Group();
             pedestalGroup.position.y = -1.5;
 
-            const boxGeo = new THREE.BoxGeometry(1.2, 0.4, 1.2);
-            const boxMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
+            const boxGeo = new THREE.BoxGeometry(1.4, 0.4, 1.4);
+            const boxMat = new THREE.MeshBasicMaterial({ color: 0x050505 });
             const box = new THREE.Mesh(boxGeo, boxMat);
             pedestalGroup.add(box);
 
@@ -151,12 +179,14 @@
             const wireBox = new THREE.LineSegments(edgesGeo, wireMat);
             pedestalGroup.add(wireBox);
 
-            const gridHelper = new THREE.GridHelper(1.2, 3, 0xffffff, 0xffffff);
+            const gridHelper = new THREE.GridHelper(1.4, 4, 0xffffff, 0x555555);
             gridHelper.position.y = 0.21;
+            pedestalGroup.add(gridHelper);
+
             scene.add(pedestalGroup);
         }
 
-        // יצירת גוף האדם מרשת משולשים מפורטת
+        // יצירת דמות האדם מרשת משולשים מפורטת
         function createHumanWireframe() {
             humanGroup = new THREE.Group();
             parts = [];
@@ -168,13 +198,15 @@
                 opacity: 0.95
             });
 
-            // פונקציית עזר ליצירת חלק ושמירתו לאנימציות
             function addPart(geo, x, y, z, rx = 0, ry = 0, rz = 0) {
                 const mesh = new THREE.Mesh(geo, material);
                 mesh.position.set(x, y, z);
                 mesh.rotation.set(rx, ry, rz);
-                // שמירת המיקום המקורי לאיפוס
-                mesh.userData = { origPos: new THREE.Vector3(x, y, z), origRot: new THREE.Euler(rx, ry, rz), vel: new THREE.Vector3() };
+                mesh.userData = { 
+                    origPos: new THREE.Vector3(x, y, z), 
+                    origRot: new THREE.Euler(rx, ry, rz), 
+                    vel: new THREE.Vector3() 
+                };
                 humanGroup.add(mesh);
                 parts.push(mesh);
                 return mesh;
@@ -189,16 +221,16 @@
             const neckGeo = new THREE.CylinderGeometry(0.1, 0.12, 0.25, 6);
             addPart(neckGeo, 0, 1.35, 0);
 
-            // חזה / פלג גוף עליון
+            // חזה
             const torsoGeo = new THREE.ConeGeometry(0.4, 0.8, 8);
             torsoGeo.scale(1, 1, 0.6);
             addPart(torsoGeo, 0, 0.85, 0);
 
-            // רגל עומדת (ישרה)
+            // רגל עומדת
             const leg1Geo = new THREE.CylinderGeometry(0.1, 0.07, 1.3, 6);
             addPart(leg1Geo, -0.15, -0.5, 0);
 
-            // רגל מקופלת (תאנה ווקטורים כמו בתמונה)
+            // רגל מקופלת
             const thighGeo = new THREE.CylinderGeometry(0.11, 0.09, 0.65, 6);
             addPart(thighGeo, 0.15, -0.25, 0.15, Math.PI / 3, 0, 0);
 
@@ -207,39 +239,35 @@
 
             // ידיים
             const armGeo = new THREE.CylinderGeometry(0.08, 0.06, 0.85, 6);
-            addPart(armGeo, -0.38, 0.9, 0.1, 0, 0, Math.PI / 8);   // יד ימין
-            addPart(armGeo, 0.38, 0.85, 0.2, -Math.PI / 6, 0, -Math.PI / 8); // יד שמאל
+            addPart(armGeo, -0.38, 0.9, 0.1, 0, 0, Math.PI / 8);
+            addPart(armGeo, 0.38, 0.85, 0.2, -Math.PI / 6, 0, -Math.PI / 8);
 
             humanGroup.position.y = -0.3;
             scene.add(humanGroup);
         }
 
-        // כפתור 1: מתן אגרוף (הדמות רועדת וזזה מעוצמה)
         function punchCharacter() {
             actionState = 'punch';
             actionTimer = 0;
         }
 
-        // כפתור 2: סיבוב מהיר סביב עצמו
         function spinCharacter() {
             actionState = 'spin';
             actionTimer = 0;
         }
 
-        // כפתור 3: פיצוץ / התפרקות החלקים לכל עבר
         function glitchCharacter() {
             actionState = 'glitch';
             actionTimer = 0;
             parts.forEach(p => {
                 p.userData.vel.set(
-                    (Math.random() - 0.5) * 0.15,
-                    Math.random() * 0.1 + 0.05,
-                    (Math.random() - 0.5) * 0.15
+                    (Math.random() - 0.5) * 0.2,
+                    Math.random() * 0.15 + 0.05,
+                    (Math.random() - 0.5) * 0.2
                 );
             });
         }
 
-        // כפתור 4: שחזור מלא למצב המקורי
         function resetCharacter() {
             actionState = 'normal';
             actionTimer = 0;
@@ -258,33 +286,28 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         }
 
-        // לולאת האנימציה הראשית
         function animate() {
             requestAnimationFrame(animate);
             actionTimer += 0.05;
 
             if (actionState === 'normal') {
-                // סיבוב איטי קבוע ותנועת ריחוף עדינה בדיוק כמו בגיפ
                 humanGroup.rotation.y += 0.008;
                 humanGroup.position.y = -0.3 + Math.sin(Date.now() * 0.003) * 0.03;
             } 
             else if (actionState === 'punch') {
-                // אפקט רעידת אגרוף
                 humanGroup.rotation.z = Math.sin(actionTimer * 30) * 0.15;
                 humanGroup.position.x = Math.sin(actionTimer * 40) * 0.08;
                 if (actionTimer > 1.5) resetCharacter();
             } 
             else if (actionState === 'spin') {
-                // סיבוב מהיר מאוד סביב הציר
-                humanGroup.rotation.y += 0.2;
+                humanGroup.rotation.y += 0.25;
                 if (actionTimer > 3) resetCharacter();
             } 
             else if (actionState === 'glitch') {
-                // פיזור החלקים באוויר
                 parts.forEach(p => {
                     p.position.add(p.userData.vel);
-                    p.rotation.x += 0.05;
-                    p.rotation.y += 0.05;
+                    p.rotation.x += 0.08;
+                    p.rotation.y += 0.08;
                 });
             }
 
