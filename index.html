@@ -6,13 +6,12 @@
     <title>מגן ישראל בסייבר - פורטל הגנה לאומי</title>
     <style>
         :root {
-            --bg-color: #030712;
-            --card-bg: #0f172a;
+            --card-bg: rgba(15, 23, 42, 0.85);
             --accent-blue: #38bdf8;
             --accent-red: #ef4444;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --border-color: #1e293b;
+            --border-color: rgba(56, 189, 248, 0.2);
         }
 
         * {
@@ -23,11 +22,24 @@
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: #030712;
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* קנבס לרקע הרשת הזיזה */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
         }
 
         /* Header */
@@ -36,8 +48,11 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 40px;
-            background: #090d16;
+            background: rgba(9, 13, 22, 0.85);
+            backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-color);
+            position: relative;
+            z-index: 10;
         }
 
         .logo-container {
@@ -52,6 +67,7 @@
             border-radius: 50%;
             border: 2px solid var(--accent-blue);
             object-fit: cover;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
         }
 
         .logo-text h1 {
@@ -84,8 +100,9 @@
         /* Main Hero */
         .hero {
             text-align: center;
-            padding: 60px 20px;
-            background: radial-gradient(circle at center, rgba(56, 189, 248, 0.05) 0%, transparent 70%);
+            padding: 70px 20px;
+            position: relative;
+            z-index: 2;
         }
 
         .hero h2 {
@@ -126,19 +143,22 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 20px 20px 60px 20px;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 25px;
             flex: 1;
+            position: relative;
+            z-index: 2;
         }
 
         .card {
             background-color: var(--card-bg);
+            backdrop-filter: blur(10px);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .card h3 {
@@ -169,14 +189,20 @@
         footer {
             text-align: center;
             padding: 25px;
-            background: #090d16;
+            background: rgba(9, 13, 22, 0.85);
+            backdrop-filter: blur(10px);
             border-top: 1px solid var(--border-color);
             color: var(--text-muted);
             font-size: 0.85rem;
+            position: relative;
+            z-index: 10;
         }
     </style>
 </head>
 <body>
+
+    <!-- קנבס לרקע הרשת הזזה -->
+    <canvas id="bg-canvas"></canvas>
 
     <!-- Header -->
     <header>
@@ -192,7 +218,6 @@
             <a href="#alerts">התרעות אבטחה</a>
             <a href="#guidelines">הנחיות לציבור</a>
             <a href="#report">דיווח על אירוע</a>
-            <a href="#about">אודות</a>
         </nav>
     </header>
 
@@ -200,34 +225,34 @@
     <section class="hero">
         <h2>חזית ההגנה הדיגיטלית של ישראל</h2>
         <p>פורטל החירום וההנחיות הלאומי לאבטחת מידע, התמודדות עם מתקפות רשת ושמירה על ביטחונם הדיגיטלי של אזרחי ישראל מסביב שעון.</p>
-        <button class="emergency-btn" onclick="alert('לדיווח דחוף על אירוע סייבר או פריצה, פנה למוקד הלאומי 119')">🚨 דיווח על אירוע חירום חירום (119)</button>
+        <button class="emergency-btn" onclick="alert('לדיווח דחוף על אירוע סייבר או פריצה, פנה למוקד הלאומי 119')">🚨 דיווח על אירוע חירום (119)</button>
     </section>
 
     <!-- Main Grid -->
     <div class="container" id="guidelines">
         <div class="card">
             <h3>🛡️ הנחיות אבטחה ליחידים</h3>
-            <p>צעדים בסיסיים שיש לנקוט כדי להגן על החשבונות והמידע האישי שלכם ברשת:</p>
+            <p>צעדים בסיסיים שיש לנקוט כדי להגן על החשבונות והמידע האישי שלך ברשת:</p>
             <ul>
-                <li>הפעלת אימות דו-שלבי (2FA) בכל החשבונות החשובים (רשתות חברתיות, מייל, בנק).</li>
+                <li>הפעלת אימות דו-שלבי (2FA) בכל החשבונות החשובים.</li>
                 <li>הימנעות מפתיחת קישורים חשודים או הודעות ממתחזים (פישינג).</li>
-                <li>שימוש בסיסמאות חזקות ושונות לכל אתר ושירות.</li>
-                <li>עדכון תדיר של מערכות ההפעלה והאפליקציות במכשירים.</li>
+                <li>שימוש בסיסמאות חזקות ושונות לכל שירות.</li>
+                <li>עדכון תדיר של מערכות ההפעלה והאפליקציות.</li>
             </ul>
         </div>
 
         <div class="card" id="alerts">
             <h3>⚠️ עדכוני אבטחה והתרעות</h3>
-            <p><strong>מצב כוננות עליון במרחב הציבורי:</strong> זוהו ניסיונות חוזרים ונשנים לפגיעה בתשתיות קריטיות ובפרופילים פרטיים באמצעות הנדסה חברתית והפצת קישורים זדוניים.</p>
+            <p><strong>מצב כוננות עליון במרחב הציבורי:</strong> זוהו ניסיונות חוזרים לפגיעה בתשתיות קריטיות ובפרופילים פרטיים באמצעות הנדסה חברתית והפצת לינקים זדוניים.</p>
             <br>
-            <p>מומלץ לגלות ערנות מוגברת, לא לאשר בקשות חברות או הודעות מגורמים לא מוכרים, ולא למסור פרטים אישיים או קודי אימות בשום אופן.</p>
+            <p>מומלץ לגלות ערנות מוגברת, לא לאשר בקשות חברות או הודעות מגורמים לא מוכרים.</p>
         </div>
 
         <div class="card" id="report">
             <h3>📢 מרכז דיווח וסיוע</h3>
-            <p>זיהיתם פעילות חשודה, ניסיון פריצה לחשבון, או התקפת רשת? אנחנו כאן כדי לטפל בכך.</p>
+            <p>זיהית פעילות חשודה, ניסיון פריצה לחשבון, או מתקפת רשת? אנחנו כאן כדי לטפל בכך.</p>
             <br>
-            <p>ניתן ליצור קשר ישיר עם מרכז השליטה הלאומי בחירום דרך קו הסיוע הארצי בטלפון <strong>119</strong> או לדווח ישירות דרך גורמי הביטחון המוסמכים.</p>
+            <p>ניתן ליצור קשר ישיר עם מרכז השליטה הלאומי בחירום דרך קו הסיוע הארצי בטלפון <strong>119</strong>.</p>
         </div>
     </div>
 
@@ -236,5 +261,86 @@
         <p>כל הזכויות שמורות לפורטל ההגנה הלאומי בסייבר © 2026</p>
     </footer>
 
+    <!-- סקריפט המייצר את רקע הרשת הזזה (בדיוק כמו בסגנון ששלחת) -->
+    <script>
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let particles = [];
+        const numParticles = 45; // כמות הנקודות ברשת
+        const maxDistance = 140; // מרחק חיבור הקווים
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.8; // מהירות תנועה אופקית
+                this.vy = (Math.random() - 0.5) * 0.8; // מהירות תנועה אנכית
+                this.radius = 2 + Math.random() * 2;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < numParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // עדכון וציור הנקודות והקווים ביניהן
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < maxDistance) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        // שקיפות הקו משתנה לפי המרחק
+                        const alpha = (1 - (distance / maxDistance)) * 0.4;
+                        ctx.strokeStyle = `rgba(56, 189, 248, ${alpha})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        initParticles();
+        animate();
+    </script>
 </body>
 </html>
